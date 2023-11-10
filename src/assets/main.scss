@@ -1,0 +1,15 @@
+@import './base.css';
+
+.topNav{
+    width : 100vw;
+    height : 50px;
+}
+
+.carousel__icon{
+    width : 30px;
+}
+
+.carousel__pagination-button::after, .carousel__pagination-button:hover::after, .carousel__pagination-button--active::after{
+    width : 30px !important;
+    border-radius: 999em !important;
+}

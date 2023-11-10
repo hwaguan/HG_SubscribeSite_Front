@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="icon"
+      href="https://www.hwa-guan.com.tw/assets/images/favicon.ico"
+      type="image/x-icon"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>華冠投顧 - 投資伊森</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.0/font/bootstrap-icons.min.css"
+      integrity="sha512-rDTlSC+d3sQQeTwkSYI7grcqLTrDZjOEEddzt/7IRA+9Q7x1Zud4j++lH29VSlNrTI0RZ/9d45X6qrFK0RD94w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.28/sweetalert2.min.css"
+      integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="src/assets/main.scss" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script lang="ts">
+      let lastScroppPos = 0
+
+      $(window).scroll(function (e) {
+        if ($(this).scrollTop() > 100) {
+          if ($(this).scrollTop() - lastScroppPos > 0) {
+            $('.mainNavContainer').addClass('hideNav')
+            $('.MobileAboutOptions').removeClass('showMobileDailog')
+            $('.mobNav').removeClass('showMobileNav')
+          } else {
+            $('.mainNavContainer').removeClass('hideNav')
+          }
+        }
+        lastScroppPos = $(this).scrollTop()
+      })
+    </script>
+  </body>
+</html>
