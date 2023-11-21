@@ -80,7 +80,7 @@
 </style>
 
 <script setup lang="ts">
-import { ref, shallowRef, watch, defineProps } from 'vue'
+import { ref, shallowRef, watch } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel' //引入 vue-carousel 套件
 import service from '@/components/RulesService.vue' //服務條款內容頁
 import authority from '@/components/RulesAuthority.vue' //內容授權內容頁

@@ -14,7 +14,7 @@
         <div class="pakcagePrice">NT ${{ pkg.p_price }} / 月</div>
 
         <div class="pakcageSubscribe">
-          <button type="button" class="btn btn-sm btn-primary">訂閱</button>
+          <button type="button" class="btn btn-sm btn-primary" @click="router.push({name : 'purchase', params : {pid : pkg.p_id}})">訂閱{{ pkg.p_id }}</button>
         </div>
       </div>
     </div>
@@ -95,8 +95,10 @@ import { sysConfig } from '@/stores/sysConfig'
 const config = sysConfig()
 import { ref } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 import decryptor from '@/assets/ts/tokenDecryptor'
 
+const router = useRouter()
 const dec = new decryptor()
 const now = new Date()
 let packageList = ref<any>()

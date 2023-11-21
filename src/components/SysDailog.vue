@@ -1,7 +1,7 @@
 <template>
   <div class="dailogMask" :class="{ showDailg: dailogType != '' }" @click.stop="closeDailog"></div>
   <div class="dailogContainer"
-    :class="{ HwaguanIntro: dailogType == 'intro', orgChart: dailogType == 'orgChart', philosopy: dailogType == 'philosophy', contact: dailogType == 'contact', service: dailogType == 'service', rules: dailogType == 'rules' }">
+    :class="{ HwaguanIntro: dailogType == 'intro', orgChart: dailogType == 'orgChart', philosopy: dailogType == 'philosophy', contact: dailogType == 'contact', service: dailogType == 'service', rules: dailogType == 'rules', login: dailogType == 'login' }">
     <component :is="showComponent" :reset="dataReset" @callBack="contactPostBack"></component>
   </div>
 </template>
@@ -42,7 +42,8 @@
 .philosopy,
 .contact,
 .service,
-.rules {
+.rules,
+.login {
   top: 15vh;
   left: 15vw;
   width: 70vw;
@@ -62,6 +63,13 @@
   height: 90vh;
 }
 
+.login{
+  top: 10vh;
+  left: 35vw;
+  width : 30vw;
+  height : 80vh;
+}
+
 @media screen and (max-width: 768px) {
   .dailogContainer {
     width: calc(100% - 20px) !important;
@@ -73,7 +81,8 @@
   .philosopy,
   .contact,
   .service, 
-  .rules {
+  .rules,
+  .login {
     top: 5vh;
     left: 0px !important;
     width: 100% !important;
@@ -96,6 +105,7 @@ import philosophy from '@/components/HwaguanPhilosophy.vue'
 import contact from '@/components/HwaguanContact.vue'
 import service from '@/components/HwaguanService.vue'
 import rules from '@/components/RulesView.vue'
+import login from '@/components/MemberLogin.vue'
 
 let dailogType = ref('')
 let showComponent = shallowRef<any>()
@@ -209,6 +219,10 @@ watch(
         dailogType.value = 'rules'
         dataReset.value = 4
         break;
+      case 'login':
+        dataReset.value++
+        showComponent.value = login
+        break
     }
   }
 )

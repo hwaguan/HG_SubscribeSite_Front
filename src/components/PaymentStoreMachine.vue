@@ -7,7 +7,7 @@
 <style scoped lang="scss"></style>
 
 <script setup lang="ts">
-import { ref, shallowRef, watch, defineProps } from 'vue'
+import { ref, shallowRef, watch } from 'vue'
 import seven from '@/components/SevenOppration.vue'
 import family from '@/components/FamilyOppration.vue'
 import hilife from '@/components/HilifeOppration.vue'

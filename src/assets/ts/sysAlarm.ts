@@ -208,4 +208,3 @@ export default class sysAlarm {
         })
     }
 }
-console.log("test");

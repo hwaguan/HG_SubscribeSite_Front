@@ -6,7 +6,7 @@
       <div class="mainNavContainer" :class="{ 'hideNav': scrollDown }">
         <div class="mainNav">
           <div class="nav1stLine">
-            <div class="navLogo">
+            <div class="navLogo" @click="router.push('/')">
               <div class="logoImg">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50"
                   viewBox="0 0 50 50" xml:space="preserve">
@@ -22,11 +22,11 @@
             <div class="memberArea">
               <div></div>
               <div class="btnCase">
-              <span class="position-absolute translate-middle badge rounded-pill bg-danger" style="margin-left : 40px">
-                99+
-                <span class="visually-hidden">unread messages</span>
-              </span>
-                <div class="shoppingCart">
+                <span class="position-absolute translate-middle badge rounded-pill bg-danger" style="margin-left : 40px" v-if="memberInfo.cart.lang > 0">
+                  {{ memberInfo.cart.lang }}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+                <div class="shoppingCart" @click="cartAction">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart4"
                     viewBox="0 0 16 16">
                     <path
@@ -35,11 +35,21 @@
                 </div>
               </div>
               <div class="btnCase">
-                <div class="memberIcon">
+                <div class="memberIcon" @click="memberAction" :title="memberInfo.name?.toString()">
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
                     class="bi bi-person-fill" viewBox="0 0 16 16">
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                   </svg>
+                </div>
+                <div class="memberOptionsContainer" :class="{ 'showMemberOptions': showMemberOptions }">
+                  <div class="memberOptionsCase">
+                    <div class="memberOptionsLine">
+                      <div class="memberAreaBtn" @click="router.push('/member')">會員專區</div>
+                    </div>
+                    <div class="memberOptionsLine">
+                      <div class="logoutBtn" @click="confirmLogout">登出</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -139,6 +149,7 @@
           .navLogo {
             display: grid;
             grid-template-columns: 50px auto;
+            cursor: pointer;
 
             .logoText {
               .headerName {
@@ -169,7 +180,7 @@
             column-gap: 10px;
 
             .btnCase {
-              padding : 5px;
+              padding: 5px;
 
               .shoppingCart,
               .memberIcon {
@@ -177,11 +188,83 @@
                 height: 40px;
                 background-color: rgb(210, 210, 210);
                 border-radius: 99em;
-                display : flex;
+                display: flex;
                 justify-content: center;
                 align-items: center;
-                cursor : pointer;
+                cursor: pointer;
               }
+
+              .shoppingCart{
+                display : none;
+              }
+            }
+
+            .memberOptionsContainer {
+              width: 0px;
+              max-height: 0px;
+              right: 180px;
+              padding: 0px 15px;
+              background-color: rgb(255, 255, 255);
+              border-left: 1px rgb(240, 240, 240) solid;
+              border-radius: 0px 0px 10px 10px;
+              box-shadow: 3px 3px 5px rgba(0, 0, 0, .3);
+              opacity: 0;
+              overflow: hidden;
+              display: hidden;
+              position: absolute;
+              z-index: 102;
+              transition-property: opacity, width, height;
+              transition-duration: .3s, .1s, .2s;
+              transition-delay: 0s, 0s, .1s;
+
+              .memberOptionsCase {
+                background-color: rgb(210, 210, 210);
+                display: grid;
+                grid-template-columns: 1fr;
+                row-gap: 1px;
+
+                .memberOptionsLine {
+                  padding: 15px 0px;
+                  background-color: rgb(255, 255, 255);
+
+                  .memberAreaBtn,
+                  .logoutBtn {
+                    width: 100%;
+                    height: 40px;
+                    letter-spacing: 3px;
+                    background-color: rgb(230, 230, 230);
+                    border-radius: 5px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                  }
+
+                  .memberAreaBtn {
+                    background: url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(0, 0, 0, .1)" class="bi bi-person-vcard" viewBox="0 0 16 16"><path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5ZM9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8Zm1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z"/><path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96c.026-.163.04-.33.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1.006 1.006 0 0 1 1 12V4Z"/></svg>') no-repeat 10px 5px, linear-gradient(to right, rgba(255, 255, 255, 0.5) 0px 100px, transparent 150px 100%), rgba(210, 210, 210, .5);
+                  }
+
+                  .memberAreaBtn:hover {
+                    background: url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(10, 100, 255, .5)" class="bi bi-person-vcard" viewBox="0 0 16 16"><path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5ZM9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8Zm1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z"/><path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96c.026-.163.04-.33.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1.006 1.006 0 0 1 1 12V4Z"/></svg>') no-repeat 10px 5px, linear-gradient(to right, rgba(10, 100, 255, 0.1) 0px 100px, transparent 150px 100%), rgba(10, 100, 255, .1);
+                  }
+
+                  .logoutBtn {
+                    background: url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(0, 0, 0, .1)" class="bi bi-person-fill-x" viewBox="0 0 16 16"><path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/><path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708Z"/></svg>') no-repeat 10px 5px, linear-gradient(to right, rgba(255, 255, 255, 0.5) 0px 100px, transparent 150px 100%), rgba(255, 0, 0, .1);
+                  }
+
+                  .logoutBtn:hover {
+                    background: url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(255, 0, 0, .1)" class="bi bi-person-fill-x" viewBox="0 0 16 16"><path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/><path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708Z"/></svg>') no-repeat 10px 5px, linear-gradient(to right, rgba(255, 205, 205, 0.5) 0px 100px, transparent 150px 100%), rgba(255, 0, 0, .1);
+                  }
+                }
+              }
+            }
+
+            .showMemberOptions {
+              width: 200px !important;
+              max-height: 999vh !important;
+              opacity: 1 !important;
+              overflow: unset;
+              display: block;
             }
           }
         }
@@ -285,6 +368,10 @@
 
         .memberArea {
           padding-right: 10px !important;
+
+          .memberOptionsContainer {
+            right: 10px !important;
+          }
         }
       }
 
@@ -356,10 +443,13 @@
 }
 </style>
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
+import { useRouter } from 'vue-router'
+import swal from 'sweetalert2'
 import Dailog from '@/components/SysDailog.vue'
 import Footer from '@/components/FooterView.vue'
+const router = useRouter()
 let dailogType = ref('')
 let dailogData = ref([{}])
 let mobileDailogOn = ref(false)
@@ -369,7 +459,21 @@ let scrollUp = ref(false)
 let scrollDown = ref(false)
 let showMobileNav = ref(false)
 let showMobileNavSubMenu = ref(false)
+let showMemberOptions = ref(false)
+let nextPage = ref('')
 let tagID = ref("")
+let memberInfo = ref({
+  id: sessionStorage.getItem("memberID") ? sessionStorage.getItem("memberID") : '' as String,
+  number: sessionStorage.getItem("memberNo") ? sessionStorage.getItem("memberNo") : '' as String,
+  name: sessionStorage.getItem("memberName") ? sessionStorage.getItem("memberName") : '' as String,
+  gender: sessionStorage.getItem("memberGender") ? sessionStorage.getItem("memberGender") : '' as String,
+  email: sessionStorage.getItem("memberEmail") ? sessionStorage.getItem("memberEmail") : '' as String,
+  mobile: sessionStorage.getItem("memberMobile") ? sessionStorage.getItem("memberMobile") : '' as String,
+  tel: sessionStorage.getItem("memberTel") ? sessionStorage.getItem("memberTel") : '' as String,
+  address: sessionStorage.getItem("memberAddress") ? sessionStorage.getItem("memberAddress") : '' as String,
+  cart: sessionStorage.getItem("memberCart") ? JSON.parse("" + sessionStorage.getItem("memberCart")) : [{}],
+  order: sessionStorage.getItem("memberOrder") ? JSON.parse("" + sessionStorage.getItem("memberOrder")) : [{}]
+})
 const appTop = ref<any>()
 const bottom = ref(false)
 
@@ -399,7 +503,8 @@ const scrolling = (e) => {
 }
 
 const showDailog = (data: any, DT: string) => {
-  //console.log("DT => " + DT + " , data => " + data);
+  console.log("DT => " + DT + " , data => " + data);
+  console.log("member name => " + sessionStorage.getItem("memberName"));
   showMobileNav.value = false
   showMobileNavSubMenu.value = false
   dailogType.value = DT
@@ -408,5 +513,64 @@ const showDailog = (data: any, DT: string) => {
 
 const scrollToTop = () => {
   appTop.value.scrollIntoView({ behavior: "smooth" })
-}  
+}
+
+const memberAction = () => {
+  if (sessionStorage.getItem("memberName") != null && ('' + sessionStorage.getItem("memberName")).length > 0) {
+    memberInfo.value.id = sessionStorage.getItem("memberID")
+    memberInfo.value.number = sessionStorage.getItem("memberNo")
+    memberInfo.value.name = sessionStorage.getItem("memberName")
+    memberInfo.value.gender = sessionStorage.getItem("memberGender")
+    memberInfo.value.email = sessionStorage.getItem("memberEmail")
+    memberInfo.value.tel = sessionStorage.getItem("memberMobile")
+    memberInfo.value.mobile = sessionStorage.getItem("memberTel")
+    memberInfo.value.address = sessionStorage.getItem("memberAddress")
+
+    showMemberOptions.value = !showMemberOptions.value
+  } else {
+    showDailog(null, 'login')
+  }
+  /*
+  nextPage.value = 'member'
+  if (memberInfo.value.id != null && typeof (memberInfo.value.id) != 'undefined') {
+    router.push("/member")
+  } else {
+    showDailog(null, 'login')
+  }
+  */
+}
+
+const cartAction = () => {
+  nextPage.value = 'cart'
+  if (memberInfo.value.id != null && typeof (memberInfo.value.id) != 'undefined') {
+    router.push("/cart")
+  } else {
+    showDailog(null, 'login')
+  }
+}
+
+const confirmLogout = () => {
+  swal.fire(
+    {
+      icon: 'question',
+      title: "您確定要登出嗎",
+      text: "網站會員登出確認",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '碓定',
+      cancelButtonText: '放棄'
+    }
+  ).then((result) => {
+    if (result.isConfirmed) {
+      sessionStorage.clear();
+      location.href = "/";
+    }
+  })
+}
+
+watch(() => sessionStorage.getItem("memberName"),
+  (before, after) => {
+    memberInfo.value.name = sessionStorage.getItem("memberName")
+  })
 </script>
