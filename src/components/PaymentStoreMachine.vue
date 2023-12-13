@@ -1,7 +1,7 @@
 <template>
-    <div class="storeMachineContainer">
-        <component :is="mContent"></component>
-    </div>
+  <div class="storeMachineContainer">
+    <component :is="mContent"></component>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>
@@ -15,27 +15,28 @@ import hilife from '@/components/HilifeOppration.vue'
 let mOpt = ref<Number>(0)
 let mContent = shallowRef<any>()
 let props = defineProps({
-    mtype: Number
+  mtype: Number
 })
 
 watch(
-    () => props.mtype,
-    (before, after) => {
-        let mt = props.mtype as number
-        mOpt.value = mt
+  () => props.mtype,
+  (before, after) => {
+    let mt = props.mtype as number
+    mOpt.value = mt
 
-        switch (mt) {
-            case 1:
-                mContent.value = seven
-                break;
-            case 2:
-                mContent.value = family
-                break;
-            case 3:
-                mContent.value = hilife
-                break;
-        }
-    })
+    switch (mt) {
+      case 1:
+        mContent.value = seven
+        break
+      case 2:
+        mContent.value = family
+        break
+      case 3:
+        mContent.value = hilife
+        break
+    }
+  }
+)
 
-    mContent.value = seven
+mContent.value = seven
 </script>

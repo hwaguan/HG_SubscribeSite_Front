@@ -4,7 +4,8 @@
     <div class="philosophyArea">
       <h5><b>華冠投顧</b></h5>
       <div>以投資人為中心的專業投資顧問公司</div>
-      在企業經營上我們秉持著<span class="heightLight"><b>專業、服務、進步、永續</b></span>的經營理念，為投資人、員工創造最大的利益。
+      在企業經營上我們秉持著<span class="heightLight"><b>專業、服務、進步、永續</b></span
+      >的經營理念，為投資人、員工創造最大的利益。
     </div>
     <div class="philosophyArea">
       <div class="contentBlock">
@@ -39,7 +40,7 @@
 }
 
 .philosophyContainer {
-    height : 95%;
+  height: 95%;
   padding: 20px;
   display: grid;
   grid-template-columns: 300px auto;
@@ -47,15 +48,15 @@
   letter-spacing: 2px;
 
   .philosophyArea {
-    height : 100%;
+    height: 100%;
     overflow-y: auto;
     text-align: justify;
 
-    .heightLight{
-        color: rgb(255, 0, 0);
+    .heightLight {
+      color: rgb(255, 0, 0);
     }
-    .contentBlock{
-        padding-bottom : 30px;
+    .contentBlock {
+      padding-bottom: 30px;
     }
   }
 }
@@ -67,7 +68,7 @@
     overflow-y: auto;
 
     .philosophyArea {
-        overflow:unset;
+      overflow: unset;
     }
   }
 }

@@ -1,7 +1,17 @@
 <template>
   <div class="dailogMask" :class="{ showDailg: dailogType != '' }" @click.stop="closeDailog"></div>
-  <div class="dailogContainer"
-    :class="{ HwaguanIntro: dailogType == 'intro', orgChart: dailogType == 'orgChart', philosopy: dailogType == 'philosophy', contact: dailogType == 'contact', service: dailogType == 'service', rules: dailogType == 'rules', login: dailogType == 'login' }">
+  <div
+    class="dailogContainer"
+    :class="{
+      HwaguanIntro: dailogType == 'intro',
+      orgChart: dailogType == 'orgChart',
+      philosopy: dailogType == 'philosophy',
+      contact: dailogType == 'contact',
+      service: dailogType == 'service',
+      rules: dailogType == 'rules',
+      login: dailogType == 'login'
+    }"
+  >
     <component :is="showComponent" :reset="dataReset" @callBack="contactPostBack"></component>
   </div>
 </template>
@@ -51,7 +61,9 @@
   opacity: 1;
 }
 
-.philosopy, .contact, .rules{
+.philosopy,
+.contact,
+.rules {
   top: 10vh;
   height: 80vh;
 }
@@ -63,11 +75,11 @@
   height: 90vh;
 }
 
-.login{
+.login {
   top: 10vh;
   left: 35vw;
-  width : 30vw;
-  height : 80vh;
+  width: 30vw;
+  height: 80vh;
 }
 
 @media screen and (max-width: 768px) {
@@ -80,7 +92,7 @@
   .orgChart,
   .philosopy,
   .contact,
-  .service, 
+  .service,
   .rules,
   .login {
     top: 5vh;
@@ -128,29 +140,33 @@ let props = defineProps({
 const emit = defineEmits(['callDailog'])
 
 const closeDailog = () => {
-
   if (dailogType.value === 'contact') {
-    if ((contactData.value.name != '' || contactData.value.phone != '' || contactData.value.mail != '' || contactData.value.content != '')) {
-      swal.fire(
-        {
+    if (
+      contactData.value.name != '' ||
+      contactData.value.phone != '' ||
+      contactData.value.mail != '' ||
+      contactData.value.content != ''
+    ) {
+      swal
+        .fire({
           icon: 'warning',
-          title: "輸入資料尚未存檔",
-          text: "您所輸入的資料尚未送出, 請問您確定要關閉聯絡表單嗎?",
+          title: '輸入資料尚未存檔',
+          text: '您所輸入的資料尚未送出, 請問您確定要關閉聯絡表單嗎?',
           showCancelButton: true,
           confirmButtonColor: 'rgb(50, 130, 80)',
           cancelButtonColor: '#d33',
           confirmButtonText: '關閉',
           cancelButtonText: '放棄'
-        }
-      ).then((result) => {
-        if (result.isConfirmed) {
-          contactData.value.name = ''
-          contactData.value.phone = ''
-          contactData.value.mail = ''
-          contactData.value.content = ''
-          emit('callDailog', null, '')
-        }
-      })
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            contactData.value.name = ''
+            contactData.value.phone = ''
+            contactData.value.mail = ''
+            contactData.value.content = ''
+            emit('callDailog', null, '')
+          }
+        })
     } else {
       emit('callDailog', null, '')
     }
@@ -160,13 +176,13 @@ const closeDailog = () => {
 }
 
 const contactPostBack = (dObj: any, page: String) => {
-  if(page != null){
+  if (page != null) {
     emit('callDailog', null, page)
-  }else{
-  contactData.value.name = dObj.name
-  contactData.value.phone = dObj.phone
-  contactData.value.mail = dObj.mail
-  contactData.value.content = dObj.content
+  } else {
+    contactData.value.name = dObj.name
+    contactData.value.phone = dObj.phone
+    contactData.value.mail = dObj.mail
+    contactData.value.content = dObj.content
   }
 }
 
@@ -175,7 +191,7 @@ watch(
   (before, after) => {
     let st = '' + props.showType
     dailogType.value = st
-    console.log(dailogType.value);
+    console.log(dailogType.value)
 
     switch (st) {
       case 'intro':
@@ -198,27 +214,27 @@ watch(
       case 'rules':
         dataReset.value = 0
         showComponent.value = rules
-        break;
+        break
       case 'authoirty':
         dataReset.value = 1
         showComponent.value = rules
         dailogType.value = 'rules'
-        break;
+        break
       case 'privacy':
         dataReset.value = 2
         showComponent.value = rules
         dailogType.value = 'rules'
-        break;
+        break
       case 'cooperate':
         dataReset.value = 3
         showComponent.value = rules
         dailogType.value = 'rules'
-        break;
+        break
       case 'laundering':
         showComponent.value = rules
         dailogType.value = 'rules'
         dataReset.value = 4
-        break;
+        break
       case 'login':
         dataReset.value++
         showComponent.value = login

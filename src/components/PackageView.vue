@@ -3,7 +3,6 @@
     <div class="packageMain">
       <div class="packageBody" v-for="(pkg, index) in packageList" :key="index">
         <div class="packageSubject">
-          <img src="package.img" v-if="pkg.p_img != ''" />
           <div class="packageSubjectText" v-if="pkg.p_img == ''">{{ pkg.p_subject }}</div>
           <div class="packageScore">瀏覽數 : {{ pkg.p_view }} / 訂閱數 : {{ pkg.p_subscribe }}</div>
         </div>
@@ -14,7 +13,13 @@
         <div class="pakcagePrice">NT ${{ pkg.p_price }} / 月</div>
 
         <div class="pakcageSubscribe">
-          <button type="button" class="btn btn-sm btn-primary" @click="router.push({name : 'purchase', params : {pid : pkg.p_id}})">訂閱{{ pkg.p_id }}</button>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            @click="router.push({ name: 'purchase', params: { pid: pkg.p_id } })"
+          >
+            訂閱{{ pkg.p_id }}
+          </button>
         </div>
       </div>
     </div>
@@ -48,7 +53,7 @@
         border-bottom: 2px rgb(220, 220, 220) solid;
       }
       .packageScore {
-        padding-bottom : 20px;
+        padding-bottom: 20px;
         font-size: 12px;
         text-align: right;
       }
@@ -84,9 +89,9 @@
 }
 
 @media screen and (max-width: 768px) {
-    .packageMain {
-        width : 100vw !important;
-    }
+  .packageMain {
+    width: 100vw !important;
+  }
 }
 </style>
 
@@ -96,7 +101,7 @@ const config = sysConfig()
 import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
-import decryptor from '@/assets/ts/tokenDecryptor'
+import decryptor from '@/assets/ts/Cryptor'
 
 const router = useRouter()
 const dec = new decryptor()
@@ -136,3 +141,4 @@ packageList.value = [
   }
 ]
 </script>
+@/assets/ts/Cryptor

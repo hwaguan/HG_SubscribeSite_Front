@@ -1,10 +1,7 @@
 <template>
-    <div></div>
+  <div></div>
 </template>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>
 
-<stype setup lang="ts">
-    
-</stype>
+<stype setup lang="ts"></stype>

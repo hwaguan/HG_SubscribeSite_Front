@@ -1,9 +1,5 @@
 <template>
-  <Carousel
-    :autoplay="2000"
-    :wrap-around="true"
-    :pauseAutoplayOnHover="true"
-  >
+  <Carousel :autoplay="2000" :wrap-around="true" :pauseAutoplayOnHover="true">
     <Slide v-for="(slide, index) in slideList" :key="index">
       <div class="carousel__item">
         <img :src="slide.img" style="width: 100%" />
@@ -46,9 +42,7 @@ import { Carousel, Pagination, Slide, Navigation } from 'vue3-carousel'
 
 import 'vue3-carousel/dist/carousel.css'
 
-let slideList = ref([{}])
-
-slideList.value = [
+let slideList = ref([
   {
     text: '',
     img: 'https://www.hwa-guan.com.tw/img/home/2023-TOP1440.jpg'
@@ -61,14 +55,14 @@ slideList.value = [
     text: '',
     img: 'https://www.hwa-guan.com.tw/img/home/20230906--LJD-NEW1440X320.jpg'
   }
-]
+])
 </script>
 
 <style scoped lang="scss">
 .carousel__icon {
-  fill: rgba(220, 220, 220, .8) !important;
+  fill: rgba(220, 220, 220, 0.8) !important;
 }
 .carousel__icon:hover {
-  fill: rgba(120, 120, 120, .5) !important;
+  fill: rgba(120, 120, 120, 0.5) !important;
 }
 </style>

@@ -55,13 +55,13 @@
       grid-template-columns: 50% 50%;
     }
 
-    .ruleItem{
-      padding : 5px 0px;
-      cursor : pointer;
+    .ruleItem {
+      padding: 5px 0px;
+      cursor: pointer;
     }
 
-    .ruleItem:hover{
-      color : rgb(255, 230, 0);
+    .ruleItem:hover {
+      color: rgb(255, 230, 0);
     }
   }
 }
@@ -97,25 +97,25 @@ const showDailog = (rid: Number) => {
   switch (rid) {
     case 1:
       targetDailog.value = 'rules'
-      break;
+      break
     case 2:
       targetDailog.value = 'authoirty'
-      break;
+      break
     case 3:
       targetDailog.value = 'privacy'
-      break;
+      break
     case 4:
       targetDailog.value = 'cooperate'
-      break;
+      break
     case 5:
       targetDailog.value = 'laundering'
-      break;
+      break
     case 6:
       window.open('https://www.104.com.tw/company/7fdplao', 'HR')
-      break;
+      break
     case 7:
       targetDailog.value = 'contact'
-      break;
+      break
   }
 
   emit('callDailog', null, targetDailog.value)
