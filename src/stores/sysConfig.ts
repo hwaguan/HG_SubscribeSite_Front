@@ -8,8 +8,22 @@ export const sysConfig = defineStore({
   state: () => ({
     hostPath: HostLoc < 1 ? LocalAPIPath : ProductionAPIPath,
     loginPath: 'login',
-    adminMenuPath: 'Admin/getAdminMenu',
     adminLoginPath: 'Admin/login',
+    adminMenuPath: 'Admin/getAdminMenu',
+    adminGetDepList: 'Admin/getDepartmentTree',
+    adminGetEmpList: 'Admin/getAllEmployees',
+    adminManagerTotalPath: 'Admin/getManagerTotal',
+    adminManagerListPath: 'Admin/getManagerList',
+    adminManagerQueryPath: 'Admin/getAdminManager',
+    adminManagerRemovePath: 'Admin/removeManager',
+    adminManagerRevivePath: 'Admin/reviveManager',
+    adminGroupListPath: 'Admin/getGroupList',
+    adminGroupNameVerifyPath: 'Admin/verifyGroupName',
+    adminGroupUpdatePath: 'Admin/updateAuthGroup',
+    adminGroupRemovePath: 'Admin/removeAuthGroup',
+    adminGroupRevivePath: 'Admin/reviveAuthGroup',
+    adminGroupModifyPath: 'Admin/updateAdminGroup',
+    adminUpdateManagerPath: 'Admin/updateManager',
     tokenPath: 'Secret/getTransferToken',
     zipCodeMapping: [
       {

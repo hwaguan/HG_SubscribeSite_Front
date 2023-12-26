@@ -22,10 +22,7 @@
             <path
               d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"
             />
-            <path
-              d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"
-            /></svg
-          ><span v-html="mmItem.Text"></span>
+            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z" /></svg><span v-html="mmItem.Text"></span>
         </div>
         <div class="switchBtnCase">
           <svg
@@ -175,6 +172,7 @@ const config = sysConfig()
 const admID = JSON.parse('' + sessionStorage.getItem('adminInfo')).admID
 const api = new apiProcdure()
 const getMenuURL = config.hostPath + config.adminMenuPath
+const emit = defineEmits(['redirectPage'])
 let menuObj = ref<any>()
 const homeObj = [{ Action: 'Home', Text: '首頁', Hit: true, Mov: false, Open: false }]
 let mainMenuLastHit = ref<any>(homeObj[0])
@@ -182,10 +180,9 @@ let subMenuLastHit = ref<any>(null)
 
 const getAdminMenu = async () => {
   const posVals = { mid: admID }
-  console.log(posVals)
+  
   const resultObj: any = await api.callAPI(getMenuURL, posVals)
   menuObj.value = resultObj.message
-  console.log(menuObj.value)
 
   menuObj.value.forEach((element: any) => {
     element.Open = false
@@ -200,8 +197,6 @@ const getAdminMenu = async () => {
     }
   })
   menuObj.value = homeObj.concat(resultObj.message)
-
-  console.log(menuObj.value)
 }
 
 getAdminMenu()
@@ -214,11 +209,12 @@ const hitMainMenu = (menuObj: any) => {
       if (mainMenuLastHit.value != null) mainMenuLastHit.value.Hit = false
       menuObj.Hit = true
       mainMenuLastHit.value = menuObj
+      console.log("hit menu ==> " + menuObj.Action)
+      emit('redirectPage', null, menuObj.Action)
     }
   } else {
     menuObj.Open = !menuObj.Open
   }
-  console.log(menuObj.Hit)
 }
 
 const hitSubMenu = (menuObj: any) => {
@@ -228,6 +224,9 @@ const hitSubMenu = (menuObj: any) => {
     if (subMenuLastHit.value != null) subMenuLastHit.value.Hit = false
     menuObj.Hit = true
     subMenuLastHit.value = menuObj
+
+    console.log("hit menu ==> " + menuObj.Action)
+    emit('redirectPage', null, menuObj.Action)
   }
 }
 </script>

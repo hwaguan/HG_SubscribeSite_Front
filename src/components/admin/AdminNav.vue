@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="adminLeftMenu">
-      <AdminMenu></AdminMenu>
+      <AdminMenu @redirectPage="redirectPage" @loadingSwitch="loadingSwitch"></AdminMenu>
     </div>
   </div>
 </template>
@@ -61,8 +61,7 @@ import { ref } from 'vue'
 import swal from 'sweetalert2'
 import AdminMenu from '@/components/admin/AdminMenu.vue'
 
-console.log(sessionStorage.getItem('adminInfo'))
-const emit = defineEmits(['redirectPage'])
+const emit = defineEmits(['redirectPage','loadingSwitch'])
 
 const adminLogout = () => {
   swal
@@ -82,5 +81,14 @@ const adminLogout = () => {
         emit('redirectPage', null, 'login')
       }
     })
+}
+
+const redirectPage = (dObj: any, page: String) => {
+  console.log("NAV reeirect to => " + page)
+    emit('redirectPage', dObj, page)
+}
+
+const loadingSwitch = (status: boolean) => {
+    emit('loadingSwitch', status)
 }
 </script>

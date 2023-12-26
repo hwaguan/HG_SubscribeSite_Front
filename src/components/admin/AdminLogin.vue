@@ -6,47 +6,21 @@
         <h2>華冠投顧</h2>
         <h4>ClickGo 網站管理平台</h4>
         <input class="acc" type="text" v-model="loginInfo.userName" placeholder="帳號" />
-        <input
-          class="pwd"
-          :type="showPass ? 'text' : 'password'"
-          v-model="loginInfo.password"
-          placeholder="密碼"
-        />
-        <svg
-          class="passEyeClose"
-          v-if="showPass"
-          xmlns="http://www.w3.org/2000/svg"
-          height="16"
-          width="20"
-          viewBox="0 0 640 512"
-          @click="showPass = false"
-          title="顯示密碼"
-        >
+        <input class="pwd" :type="showPass ? 'text' : 'password'" v-model="loginInfo.password" placeholder="密碼" />
+        <svg class="passEyeClose" v-if="showPass" xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+          viewBox="0 0 640 512" @click="showPass = false" title="顯示密碼">
           <path
-            d="M634 471L36 3.5A16 16 0 0 0 13.5 6l-10 12.5A16 16 0 0 0 6 41l598 467.5a16 16 0 0 0 22.5-2.5l10-12.5A16 16 0 0 0 634 471zM296.8 146.5l134.8 105.4C429.4 191.9 380.5 144 320 144a112.3 112.3 0 0 0 -23.2 2.5zm46.4 219.1L208.4 260.2C210.7 320.1 259.5 368 320 368a113 113 0 0 0 23.2-2.5zM320 112c98.7 0 189.1 55 237.9 144a285.5 285.5 0 0 1 -44 60.2l37.7 29.5a333.7 333.7 0 0 0 52.9-75.1 32.4 32.4 0 0 0 0-29.2C550.3 135.6 442.9 64 320 64c-36.7 0-71.7 7-104.6 18.8l46.4 36.3c18.9-4.3 38.3-7.1 58.2-7.1zm0 288c-98.7 0-189.1-55-237.9-144a285.5 285.5 0 0 1 44.1-60.2l-37.7-29.5a333.6 333.6 0 0 0 -52.9 75.1 32.4 32.4 0 0 0 0 29.2C89.7 376.4 197.1 448 320 448c36.7 0 71.7-7.1 104.6-18.8l-46.4-36.3C359.3 397.2 339.9 400 320 400z"
-          />
+            d="M634 471L36 3.5A16 16 0 0 0 13.5 6l-10 12.5A16 16 0 0 0 6 41l598 467.5a16 16 0 0 0 22.5-2.5l10-12.5A16 16 0 0 0 634 471zM296.8 146.5l134.8 105.4C429.4 191.9 380.5 144 320 144a112.3 112.3 0 0 0 -23.2 2.5zm46.4 219.1L208.4 260.2C210.7 320.1 259.5 368 320 368a113 113 0 0 0 23.2-2.5zM320 112c98.7 0 189.1 55 237.9 144a285.5 285.5 0 0 1 -44 60.2l37.7 29.5a333.7 333.7 0 0 0 52.9-75.1 32.4 32.4 0 0 0 0-29.2C550.3 135.6 442.9 64 320 64c-36.7 0-71.7 7-104.6 18.8l46.4 36.3c18.9-4.3 38.3-7.1 58.2-7.1zm0 288c-98.7 0-189.1-55-237.9-144a285.5 285.5 0 0 1 44.1-60.2l-37.7-29.5a333.6 333.6 0 0 0 -52.9 75.1 32.4 32.4 0 0 0 0 29.2C89.7 376.4 197.1 448 320 448c36.7 0 71.7-7.1 104.6-18.8l-46.4-36.3C359.3 397.2 339.9 400 320 400z" />
         </svg>
-        <svg
-          class="passEye"
-          v-if="!showPass"
-          xmlns="http://www.w3.org/2000/svg"
-          height="16"
-          width="18"
-          viewBox="0 0 576 512"
-          @click="showPass = true"
-          title="隱藏密碼"
-        >
+        <svg class="passEye" v-if="!showPass" xmlns="http://www.w3.org/2000/svg" height="16" width="18"
+          viewBox="0 0 576 512" @click="showPass = true" title="隱藏密碼">
           <path
-            d="M288 144a110.9 110.9 0 0 0 -31.2 5 55.4 55.4 0 0 1 7.2 27 56 56 0 0 1 -56 56 55.4 55.4 0 0 1 -27-7.2A111.7 111.7 0 1 0 288 144zm284.5 97.4C518.3 135.6 410.9 64 288 64S57.7 135.6 3.5 241.4a32.4 32.4 0 0 0 0 29.2C57.7 376.4 165.1 448 288 448s230.3-71.6 284.5-177.4a32.4 32.4 0 0 0 0-29.2zM288 400c-98.7 0-189.1-55-237.9-144C98.9 167 189.3 112 288 112s189.1 55 237.9 144C477.1 345 386.7 400 288 400z"
-          />
+            d="M288 144a110.9 110.9 0 0 0 -31.2 5 55.4 55.4 0 0 1 7.2 27 56 56 0 0 1 -56 56 55.4 55.4 0 0 1 -27-7.2A111.7 111.7 0 1 0 288 144zm284.5 97.4C518.3 135.6 410.9 64 288 64S57.7 135.6 3.5 241.4a32.4 32.4 0 0 0 0 29.2C57.7 376.4 165.1 448 288 448s230.3-71.6 284.5-177.4a32.4 32.4 0 0 0 0-29.2zM288 400c-98.7 0-189.1-55-237.9-144C98.9 167 189.3 112 288 112s189.1 55 237.9 144C477.1 345 386.7 400 288 400z" />
         </svg>
-        <div
-          :class="{
-            noGo: loginInfo.userName == '' || loginInfo.password == '',
-            goodToGo: loginInfo.userName != '' && loginInfo.password != ''
-          }"
-          @click="verifyLogin"
-        >
+        <div :class="{
+          noGo: loginInfo.userName == '' || loginInfo.password == '',
+          goodToGo: loginInfo.userName != '' && loginInfo.password != ''
+        }" @click="verifyLogin">
           GO
         </div>
       </div>
@@ -154,8 +128,7 @@ $baseGray: rgba(150, 150, 150, 1);
   }
 }
 
-@media screen and (max-width: 768px) {
-}
+@media screen and (max-width: 768px) {}
 </style>
 
 <script setup lang="ts">
@@ -169,7 +142,7 @@ import apiProcdure from '@/assets/ts/APIProcdure'
 import loading from '@/components/LoadingCover.vue'
 
 const config = sysConfig()
-const emit = defineEmits(['redirectPage'])
+const emit = defineEmits(['redirectPage', 'loadingSwitch'])
 const alarm = new sysAlarm()
 const dec = new cryptor()
 const api = new apiProcdure()
@@ -184,12 +157,16 @@ let loginInfo = ref({
 let showPass = ref(false)
 let showLoading = ref(false)
 
+const loadingSwitch = (status: boolean) => {
+  emit('loadingSwitch', status)
+}
+
 const verifyLogin = async () => {
   let sysAdmin = loginInfo.value.userName == 'sysAdmin' && loginInfo.value.password == '1qazXSW@'
   const tokenPath = config.hostPath + config.tokenPath
 
   if (loginInfo.value.userName != '' && loginInfo.value.password != '') {
-    showLoading.value = true
+    loadingSwitch(true)
 
     if (!sysAdmin) {
       const loginPath = config.hostPath + config.adminLoginPath
@@ -207,7 +184,7 @@ const verifyLogin = async () => {
         if (loginResult.code == -1) {
           let footer = "<a href='#'>忘記密碼?</a>"
 
-          showLoading.value = false
+          loadingSwitch(false)
           alarm.centralError('登入失敗', '請確認您的登入資訊!', footer)
         } else {
           swal.fire({
@@ -217,9 +194,9 @@ const verifyLogin = async () => {
         }
       }
 
-      showLoading.value = false
+      loadingSwitch(false)
     } else {
-      showLoading.value = false
+      loadingSwitch(false)
       const sysAdminStr =
         '{"admID": 0,"admName": "最高管理者","admCorp": "HG01","admDep": "0004","admMail": "","admExt": "","admAccount": "","admPassword": "","admAuthority": "all","admEnabled": 1,"admCreateDate": "2023-12-06T16:40:28.387","admLastModify": "","admGroup": 0}'
       sessionStorage.setItem('adminInfo', sysAdminStr)
