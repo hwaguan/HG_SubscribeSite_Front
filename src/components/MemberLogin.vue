@@ -6,7 +6,7 @@
     <div class="inputZone">
       <div class="thirdPartyLogin">
         <div class="loginLine">
-          <div class="loginBtn googlelogin">
+          <div class="loginBtn googlelogin" @click="googleLogin">
             使用 Google 帳號<span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span>
           </div>
         </div>
@@ -29,13 +29,8 @@
           <div class="infoLine account" :class="{ accountError: loginError.account.error }">
             <div class="infoTitle">帳　　號</div>
             <div class="infoInput">
-              <input
-                type="text"
-                class="memberInfoInput"
-                v-model="loginInfo.account"
-                placeholder="請輸入您的 E-mail"
-                @change="confirmAccount"
-              />
+              <input type="text" class="memberInfoInput" v-model="loginInfo.account" placeholder="請輸入您的 E-mail"
+                @change="confirmAccount" />
             </div>
             <div class="infoHide"></div>
           </div>
@@ -45,24 +40,10 @@
           <div class="infoLine password" :class="{ passwordError: loginError.pass.error }">
             <div class="infoTitle">密　　碼</div>
             <div class="infoInput">
-              <input
-                type="text"
-                class="memberInfoInput"
-                v-model="loginInfo.password"
-                maxlength="12"
-                v-if="!hidePass"
-                placeholder="請輸入 6 ~ 12 位密碼"
-                @change="confirmPass"
-              />
-              <input
-                type="password"
-                class="memberInfoInput"
-                v-model="loginInfo.password"
-                maxlength="12"
-                v-if="hidePass"
-                placeholder="請輸入 6 ~ 12 位密碼"
-                @change="confirmPass"
-              />
+              <input type="text" class="memberInfoInput" v-model="loginInfo.password" maxlength="12" v-if="!hidePass"
+                placeholder="請輸入 6 ~ 12 位密碼" @change="confirmPass" />
+              <input type="password" class="memberInfoInput" v-model="loginInfo.password" maxlength="12" v-if="hidePass"
+                placeholder="請輸入 6 ~ 12 位密碼" @change="confirmPass" />
             </div>
             <div class="infoHide">
               <i class="bi bi-eye-slash" @click="hideSwitch(0)" v-if="hidePass"></i>
@@ -75,24 +56,10 @@
           <div class="infoLine confirmPass" :class="{ confirmPassError: loginError.cpass.error }">
             <div class="infoTitle">確認密碼</div>
             <div class="infoInput">
-              <input
-                type="text"
-                class="memberInfoInput"
-                v-model="loginInfo.confirmPass"
-                v-if="!hideConfirmPass"
-                maxlength="12"
-                placeholder="請再次輸入密碼"
-                @change="confirmVerify"
-              />
-              <input
-                type="password"
-                class="memberInfoInput"
-                v-model="loginInfo.confirmPass"
-                v-if="hideConfirmPass"
-                maxlength="12"
-                placeholder="請再次輸入密碼"
-                @change="confirmVerify"
-              />
+              <input type="text" class="memberInfoInput" v-model="loginInfo.confirmPass" v-if="!hideConfirmPass"
+                maxlength="12" placeholder="請再次輸入密碼" @change="confirmVerify" />
+              <input type="password" class="memberInfoInput" v-model="loginInfo.confirmPass" v-if="hideConfirmPass"
+                maxlength="12" placeholder="請再次輸入密碼" @change="confirmVerify" />
             </div>
             <div class="infoHide">
               <i class="bi bi-eye-slash" @click="hideSwitch(1)" v-if="hideConfirmPass"></i>
@@ -198,11 +165,9 @@
     width: 80%;
     margin-left: 10%;
     height: 30px;
-    background: linear-gradient(
-      transparent 0px 13px,
-      rgb(210, 210, 210) 13px 13px,
-      transparent 14px 30px
-    );
+    background: linear-gradient(transparent 0px 13px,
+        rgb(210, 210, 210) 13px 13px,
+        transparent 14px 30px);
     display: flex;
     justify-content: center;
 
@@ -315,11 +280,9 @@
     margin-top: 20px;
     text-align: center;
     /*background-color: rgba(230, 230, 230, .5);*/
-    background: linear-gradient(
-      transparent 0px 23px,
-      rgb(210, 210, 210) 23px 23px,
-      transparent 24px 30px
-    );
+    background: linear-gradient(transparent 0px 23px,
+        rgb(210, 210, 210) 23px 23px,
+        transparent 24px 30px);
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1px;
@@ -399,19 +362,24 @@
 import { ref, watch } from 'vue'
 import swal from 'sweetalert2'
 import sysAlarm from '@/assets/ts/sysAlarm'
+import thirdPartyLauncher from '@/assets/ts/ThirdPartyLauncher'
+import memberLauncher from '@/assets/ts/MemberLauncher'
+
 const alarm = new sysAlarm()
 const now = new Date()
+const TPL = new thirdPartyLauncher()
+const launcher = new memberLauncher()
 const greeting =
   now.getHours() < 11
     ? '早安'
     : now.getHours() > 13
-    ? '日安'
-    : now.getHours() > 18
-    ? '晚安'
-    : '日安'
+      ? '日安'
+      : now.getHours() > 18
+        ? '晚安'
+        : '日安'
 
 //定義數值上抛器
-const emit = defineEmits(['callBack'])
+const emit = defineEmits(['callBack', 'loadingSwitch', 'closeDailog'])
 
 let loginInfo = ref({
   account: '',
@@ -440,13 +408,15 @@ let isLogin = ref(true)
 let allPass = ref(false)
 let memberInfo = ref({
   id: sessionStorage.getItem('memberID'),
-  number: sessionStorage.getItem('memberNo'),
   name: sessionStorage.getItem('memberName'),
   gender: sessionStorage.getItem('memberGender'),
   email: sessionStorage.getItem('memberEmail'),
   mobile: sessionStorage.getItem('memberMobile'),
   tel: sessionStorage.getItem('memberTel'),
-  address: sessionStorage.getItem('memberAddress'),
+  zip: sessionStorage.getItem('memberAddrZip'),
+  city: sessionStorage.getItem('memberAddrCity'),
+  area: sessionStorage.getItem('memberAddrArea'),
+  address: sessionStorage.getItem('memberAddrOther'),
   cart: JSON.parse('' + sessionStorage.getItem('memberCart')),
   order: JSON.parse('' + sessionStorage.getItem('memberOrder'))
 })
@@ -478,7 +448,7 @@ const hideSwitch = (hideField: number) => {
 }
 
 const confirmAccount = () => {
-  console.log('confirmAccount')
+  //console.log('confirmAccount')
   let regex = new RegExp(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)
 
   loginError.value.account.error = !regex.test(loginInfo.value.account)
@@ -517,7 +487,7 @@ const verifyInfo = () => {
     !loginError.value.pass.error &&
     !loginError.value.cpass.error
 
-  console.log(allPass.value)
+  //console.log(allPass.value)
   //return allPass.value
 }
 
@@ -538,18 +508,17 @@ const proceedLogin = () => {
       })
     } else {
       memberInfo.value.id = '1'
-      memberInfo.value.number = 'T1234567'
       memberInfo.value.name = '蔡詩媛'
       memberInfo.value.gender = '0'
       memberInfo.value.email = 'tester01@google.com'
       memberInfo.value.tel = '0221234567'
       memberInfo.value.mobile = '0912345678'
+
       memberInfo.value.address = '地球某一處無人知的小角落'
       memberInfo.value.cart = [{}]
       memberInfo.value.order = [{}]
 
       sessionStorage.setItem('memberID', memberInfo.value.id)
-      sessionStorage.setItem('memberNo', memberInfo.value.number)
       sessionStorage.setItem('memberName', memberInfo.value.name)
       sessionStorage.setItem('memberGender', memberInfo.value.gender)
       sessionStorage.setItem('memberEmail', memberInfo.value.email)
@@ -570,5 +539,65 @@ const proceedLogin = () => {
       )
     }
   }
+}
+
+const googleLogin = async () => {
+
+  loadingSwitch(true)
+  const googleAccount = await TPL.googleLogin()
+
+  console.log("google response user ===> ")
+  console.log(googleAccount)
+
+  const loginResult = await launcher.googleLogin(googleAccount.sub, googleAccount.name, googleAccount.email, googleAccount.picture)
+  loadingSwitch(false)
+
+  if (loginResult.result) {
+    const resultCode = loginResult.result.code
+    const userInfo = loginResult.message
+
+    swal.fire({
+      icon: 'success',
+      title: "登入成功",
+      text: userInfo.mGoogleName + " 您好",
+      //showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      //cancelButtonColor: '#d33',
+      confirmButtonText: '碓定',
+      //cancelButtonText: '放棄'
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+            memberInfo.value.id = "" + userInfo.mID
+            memberInfo.value.name = "" + userInfo.mGoogleName
+            memberInfo.value.gender = "" + userInfo.mGender == null ? "未設定" : userInfo.mGender == 0 ? "女" : "男"
+            memberInfo.value.email = "" + userInfo.mMail
+            memberInfo.value.tel = "" + userInfo.mTelHome
+            memberInfo.value.mobile = "" + userInfo.mMobile
+            memberInfo.value.zip = "" + userInfo.mZip
+            memberInfo.value.city = "" + userInfo.mAddressCity
+            memberInfo.value.area = "" + userInfo.mAddressArea
+            memberInfo.value.address = "" + userInfo.mAddressRest
+            memberInfo.value.order = [{}]
+
+            sessionStorage.setItem('memberID', memberInfo.value.id)
+            sessionStorage.setItem('memberName', memberInfo.value.name)
+            sessionStorage.setItem('memberGender', memberInfo.value.gender)
+            sessionStorage.setItem('memberEmail', memberInfo.value.email)
+            sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
+            sessionStorage.setItem('memberTel', memberInfo.value.tel)
+            sessionStorage.setItem('memberAddrZip', memberInfo.value.zip)
+            sessionStorage.setItem('memberAddrCity', memberInfo.value.city)
+            sessionStorage.setItem('memberAddrArea', memberInfo.value.area)
+            sessionStorage.setItem('memberAddrRest', memberInfo.value.address)
+
+            emit('closeDailog')
+        }
+      })
+  }
+}
+
+const loadingSwitch = (status: boolean) => {
+  emit('loadingSwitch', status)
 }
 </script>

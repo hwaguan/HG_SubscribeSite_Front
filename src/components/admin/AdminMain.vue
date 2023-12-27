@@ -36,18 +36,18 @@ const props = defineProps({
 
 const redirectPage = (dObj: any, page: String) => {
     //emit('redirectPage', dObj, page)
-    console.log("AdminMain redirect to ==> " + page)
+    //console.log("AdminMain redirect to ==> " + page)
     adminFunctionChange("" + page)
 }
 
 const loadingSwitch = (status: boolean) => {
-    console.log("=== AdminMain loading switch ===")
+    //console.log("=== AdminMain loading switch ===")
     emit('loadingSwitch', status)
 }
 
-console.log("props.goFunction ==> ")
+//console.log("props.goFunction ==> ")
 const adminFunctionChange = (pageCode: string) => {
-    console.log("adminFunctionChange ==> " + pageCode)
+    //console.log("adminFunctionChange ==> " + pageCode)
     switch (pageCode) {
         case "":
             showComponent.value = home
@@ -62,7 +62,7 @@ const adminFunctionChange = (pageCode: string) => {
             showComponent.value = manager
             break;
         case "login":
-            console.log("=== logout === " + pageCode)
+            //console.log("=== logout === " + pageCode)
             emit('redirectPage', null, pageCode)
             break;
     }

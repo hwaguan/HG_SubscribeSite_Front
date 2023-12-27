@@ -162,8 +162,8 @@ onMounted(() => {
     groupModel.value.groupName = props.gObj.agName
     groupModel.value.groupRank = props.gObj.agRank
     groupModel.value.groupAuth = props.gObj.agContent
-    console.log("AdminGroupEdit on mounted!!")
-    console.log(groupModel.value)
+    //console.log("AdminGroupEdit on mounted!!")
+    //console.log(groupModel.value)
 
     groupNamePass.value = groupModel.value.groupID > 0
 })
@@ -175,12 +175,12 @@ const checkAuthName = async() => {
     loadingSwitch(true)
     const queryResult: any = await api.callAPI(groupVerifyPath, { groupid: groupModel.value.groupID, groupName: groupModel.value.groupRank })
     groupNamePass.value = queryResult.message.toUpperCase() == "OK"
-    console.log(queryResult)
+    //console.log(queryResult)
     loadingSwitch(false)
 }
 
 const changeAuth = (authObj: any) => {
-    console.log(authObj)
+    //console.log(authObj)
     groupModel.value.groupAuth = authObj.join(",")
 }
 
@@ -194,7 +194,7 @@ const updateAuthGroup = async () => {
     const queryResult: any = await api.callAPI(groupUpdatePath, groupModel.value)
     loadingSwitch(false)
 
-    console.log(groupModel.value)
+    //console.log(groupModel.value)
 
     let resultStr = "群組資料"
 
@@ -220,7 +220,7 @@ const updateAuthGroup = async () => {
 }
 
 const loadingSwitch = (status: boolean) => {
-    console.log("=== AdminManagerList loading switch ===")
+    //console.log("=== AdminManagerList loading switch ===")
     emit('loadingSwitch', status)
 }
 </script>

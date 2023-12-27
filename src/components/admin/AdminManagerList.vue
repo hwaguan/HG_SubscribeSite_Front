@@ -410,7 +410,7 @@ const props = defineProps({
 
 watch(() => props.lastPage, (before, after) => {
     currentPage.value = after != null ? after : 1
-    console.log("Back to last page ==> " + currentPage.value)
+    //console.log("Back to last page ==> " + currentPage.value)
 })
 
 const queryData = async (setPage: number, setRows: number) => {
@@ -419,11 +419,11 @@ const queryData = async (setPage: number, setRows: number) => {
     managerCount.value = totalResult.message
     const queryResult: any = await api.callAPI(managerListPath, { page: setPage, rows: setRows, showAll: showAll.value })
     managerList.value = queryResult.message
-    console.log("Memger Count Receieve => " + managerCount.value)
-    console.log(managerList.value)
-    console.log("mCount => " + managerCount.value + " / showRows => " + showRows.value)
+    //console.log("Memger Count Receieve => " + managerCount.value)
+    //console.log(managerList.value)
+    //console.log("mCount => " + managerCount.value + " / showRows => " + showRows.value)
     totalPage.value = Math.ceil(managerCount.value / showRows.value)
-    console.log("total page ===> " + totalPage.value)
+    //console.log("total page ===> " + totalPage.value)
 
     rangeStart.value = totalPage.value < 5 ? 1 : Math.floor(currentPage.value / 5) * 5;
     rangeEnd.value = rangeStart.value + 5 >= totalPage.value ? totalPage.value : rangeStart.value + 5;
@@ -455,8 +455,8 @@ const removeManager = (aid: number, aName: string) => {
             const removeManager = async () => {
                 loadingSwitch(true)
                 const queryResult: any = await api.callAPI(managerRemovePath, { aID: aid })
-                console.log("remove result ===> ")
-                console.log(queryResult)
+                //console.log("remove result ===> ")
+                //console.log(queryResult)
                 loadingSwitch(false)
 
                 queryData(currentPage.value, showRows.value)
@@ -487,8 +487,8 @@ const reviveManager = (aid: number, aName: string) => {
             const reviveManager = async () => {
                 loadingSwitch(true)
                 const queryResult: any = await api.callAPI(managerRevivePath, { aID: aid })
-                console.log("revive result ===> ")
-                console.log(queryResult)
+                //console.log("revive result ===> ")
+                //console.log(queryResult)
                 loadingSwitch(false)
 
                 queryData(currentPage.value, showRows.value)
@@ -507,7 +507,7 @@ const showRemovedData = () => {
 }
 
 const loadingSwitch = (status: boolean) => {
-    console.log("=== AdminManagerList loading switch ===")
+    //console.log("=== AdminManagerList loading switch ===")
     emit('loadingSwitch', status)
 }
 

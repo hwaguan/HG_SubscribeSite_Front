@@ -25,8 +25,8 @@ export default class APIProcdure {
         })
         .then((response) => {
           const queryResult = response.data
-          console.log('API result:')
-          console.log(queryResult)
+          //console.log('API result:')
+          //console.log(queryResult)
           /*
                     console.log(queryResult.message[0])
                     */

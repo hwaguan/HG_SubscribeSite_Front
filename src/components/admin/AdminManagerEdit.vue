@@ -93,12 +93,14 @@
                 </div>
                 <div v-if="mid == 0">
                     套用群組：<select @change="useAuth($event)">
-                        <option value=""> --- 請選擇 --- </option>
-                        <option :value="'' + auth.agContent" v-for="(auth, index) in authGroupList" :key="index" v-html="auth.agName"></option>
+                        <option value="99_"> --- 請選擇 --- </option>
+                        <option :value="auth.agID + '_' + auth.agContent" v-for="(auth, index) in authGroupList" :key="index"
+                            v-html="auth.agName"></option>
                     </select>
                 </div>
             </div>
-            <authPicker :mAuth="empDataModel.empAuth.join(',')" @authChange="changeAuth"></authPicker>
+            <authPicker :mAuth="empDataModel.empAuth == null ? '' : empDataModel.empAuth.join(',')"
+                @authChange="changeAuth"></authPicker>
             <!--
             <div class="authListContainer">
                 <div class="authListPage" v-for="(page, index) in menuObj" :key="index"
@@ -156,7 +158,7 @@
                 <div class="btn btn-sm btn-danger actionBtn aborttBtn" v-html="'放棄' + (mid < 1 ? '新增' : '修改')"
                     @click="abortAction"></div>
                 <div class="btn btn-sm actionBtn submitBtn"
-                    :class="{ 'btn-success': empDataModel.empNo != '' && empDataModel.empPassword == empDataModel.empConfirmPassword && empDataModel.empPassword != '' && empDataModel.empConfirmPassword != '', 'btn-disabled': empDataModel.empNo == '' || empDataModel.empPassword != empDataModel.empConfirmPassword || empDataModel.empPassword == '' || empDataModel.empConfirmPassword == '' }">
+                    :class="{ 'btn-success': allowSave, 'btn-disabled': !allowSave }" @click="updateManager">
                     送出</div>
             </div>
         </div>
@@ -278,6 +280,7 @@ let showPass = ref(false)
 let showCPass = ref(false)
 let menuObj = ref<any>()
 let authGroupList = ref<any>()
+let allowSave = ref(false)
 
 const props = defineProps({
     mid: {
@@ -294,23 +297,27 @@ let empDataModel = ref({
     empID: "",
     empNo: "",
     empName: "",
-    empCo: "",
+    empBranch: "",
+    empBranchName: "",
     empDep: "",
     empDepName: "",
     empExt: "",
     empMail: "",
+    empGroup: 99,
     empPassword: props.mid == 0 ? "000000" : "",
     empConfirmPassword: props.mid == 0 ? "000000" : "",
-    empAuth: "".split(",")
+    empAuth: "".split(","),
+    empEnabled: true
 })
 
 const changeAuth = (authObj: any) => {
     empDataModel.value.empAuth = authObj
-    console.log(empDataModel.value.empAuth)
+    checkSavePass()
+    //console.log(empDataModel.value.empAuth)
 }
 
 const abortAction = () => {
-    console.log(empDataModel.value.empNo == "")
+    //console.log(empDataModel.value.empNo == "")
     if (empDataModel.value.empNo != "") {
 
         swal
@@ -330,14 +337,17 @@ const abortAction = () => {
                         empID: "",
                         empNo: "",
                         empName: "",
-                        empCo: "",
+                        empBranch: "",
+                        empBranchName: "",
                         empDep: "",
                         empDepName: "",
                         empExt: "",
                         empMail: "",
+    empGroup: 99,
                         empPassword: props.mid == 0 ? "" : "",
                         empConfirmPassword: props.mid == 0 ? "" : "",
-                        empAuth: []
+                        empAuth: [],
+                        empEnabled: true
                     }
                     emit('redirectPage', { managerID: 0, lastPage: props.lstPG }, "list")
                 }
@@ -347,14 +357,17 @@ const abortAction = () => {
             empID: "",
             empNo: "",
             empName: "",
-            empCo: "",
+            empBranch: "",
+            empBranchName: "",
             empDep: "",
             empDepName: "",
             empExt: "",
             empMail: "",
+    empGroup: 99,
             empPassword: props.mid == 0 ? "" : "",
             empConfirmPassword: props.mid == 0 ? "" : "",
-            empAuth: []
+            empAuth: [],
+            empEnabled: true
         }
         emit('redirectPage', { managerID: 0, lastPage: props.lstPG }, "list")
     }
@@ -362,52 +375,130 @@ const abortAction = () => {
 
 const changeEmp = (empModel: any) => {
     empDataModel.value = empModel
-    console.log(empDataModel.value)
+    checkSavePass()
+    //console.log(empDataModel.value)
 }
 
 const loadingSwitch = (status: boolean) => {
     emit('loadingSwitch', status)
 }
 
-const useAuth = (e:any) => {
-    console.log(e.target.value)
+const useAuth = (e: any) => {
+    //console.log(e.target.value)
+    const AuthArr = e.target.value.split("_")
+    empDataModel.value.empGroup = parseInt(AuthArr[0])
+    empDataModel.value.empAuth = AuthArr[1].split(",")
+    checkSavePass()
+}
 
-    empDataModel.value.empAuth = e.target.value.split(",")
+const checkSavePass = () => {
+    //console.log("check save pass ===============> ")
+    let passed = false
+
+    if (props.mid > 0) {
+        passed = empDataModel.value.empAuth.length > 0
+
+        if (empDataModel.value.empPassword != "" || empDataModel.value.empConfirmPassword != "") {
+            passed = empDataModel.value.empPassword == empDataModel.value.empConfirmPassword
+        }
+    } else {
+        passed = empDataModel.value.empNo != ""
+        passed = empDataModel.value.empNo.length == 8
+        passed = empDataModel.value.empPassword != "" && empDataModel.value.empConfirmPassword != ""
+        passed = empDataModel.value.empPassword == empDataModel.value.empConfirmPassword
+        passed = empDataModel.value.empAuth != null && empDataModel.value.empAuth.length > 0
+    }
+
+    allowSave.value = passed
+}
+
+const updateManager = () => {
+    let managerEntity = {
+        empID: props.mid > 0 ? props.mid : 0,
+        empNo: empDataModel.value.empNo,
+        empName: empDataModel.value.empName,
+        empCo: empDataModel.value.empBranch,
+        empDep: empDataModel.value.empDep,
+        empExt: empDataModel.value.empExt,
+        empMail: empDataModel.value.empMail,
+        empGroup: props.mid == 0 ? empDataModel.value.empGroup : empDataModel.value.empGroup,
+        empPass: props.mid == 0 ? "000000" : empDataModel.value.empPassword,
+        empAuth: empDataModel.value.empAuth.length > 0 ? empDataModel.value.empAuth.join(",") : "",
+        //empEnabled: props.mid == 0 ? true : empDataModel.value.empEnabled
+    }
+    console.log(empDataModel.value)
+    console.log(managerEntity)
+
+    const updateProcdure = async () => {
+        const managerUpdatePath = config.hostPath + config.adminManagerUpdatePath
+        loadingSwitch(true)
+        const updateResult: any = await api.callAPI(managerUpdatePath, managerEntity)
+        loadingSwitch(false)
+
+        console.log(updateResult)
+        const resultCode: any = updateResult.code
+
+        swal.fire({
+            icon: resultCode == 200 ? 'success' : 'error',
+            title: resultCode == 200 ? "管理員 " + (managerEntity.empName + "-" + managerEntity.empNo) + " " + (props.mid > 0 ? "修改" : "新增") + "成功." : "管理員 " + (managerEntity.empName + "-" + managerEntity.empNo) + " " + (props.mid > 0 ? "修改" : "新增") + "失敗.",
+            text: resultCode == 200 ? "" : "請稍候再試...",
+            //showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            //cancelButtonColor: '#d33',
+            confirmButtonText: '碓定',
+            //cancelButtonText: '放棄'
+        })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    if (resultCode == 200)emit('redirectPage', { managerID: 0, lastPage: props.lstPG }, "list")
+                }
+            })
+    }
+
+    updateProcdure()
 }
 
 if (props.mid > 0) {
     const managerQueryPath = config.hostPath + config.adminManagerQueryPath
-    console.log("manager query path ==> " + managerQueryPath)
+    //console.log("manager query path ==> " + managerQueryPath)
 
     const queryData = async () => {
         loadingSwitch(true)
         const queryResult: any = await api.callAPI(managerQueryPath, { mid: props.mid })
+        loadingSwitch(false)
 
-        console.log(queryResult.message)
+        //console.log(queryResult.message)
 
         empDataModel.value.empID = queryResult.message.empID
         empDataModel.value.empNo = queryResult.message.empNo
         empDataModel.value.empName = queryResult.message.empName
-        empDataModel.value.empCo = queryResult.message.empBranch
+        empDataModel.value.empBranch = queryResult.message.empBranch
+        empDataModel.value.empBranchName = queryResult.message.empBranchName
         empDataModel.value.empDep = queryResult.message.empDep
         empDataModel.value.empDepName = queryResult.message.empDepName
         empDataModel.value.empExt = queryResult.message.empExt
+        empDataModel.value.empGroup = queryResult.message.empGroup
         empDataModel.value.empMail = queryResult.message.empMail
         empDataModel.value.empAuth = queryResult.message.empAuth
+        empDataModel.value.empEnabled = queryResult.message.empEnabled
 
-        console.log(empDataModel.value)
+        //console.log(empDataModel.value)
         loadingSwitch(false)
+
+        checkSavePass()
     }
 
     queryData()
-}else{
+} else {
     const queryAuthGroup = async () => {
         const authGroupQueryPath = config.hostPath + config.adminGroupListPath
         loadingSwitch(true)
-        const queryResult: any = await api.callAPI(authGroupQueryPath, {page : 1, rows : 30})
+        const queryResult: any = await api.callAPI(authGroupQueryPath, { page: 1, rows: 30 })
 
         authGroupList.value = queryResult.message
         loadingSwitch(false)
+
+        checkSavePass()
     }
 
     queryAuthGroup()

@@ -84,7 +84,7 @@ const adminLogout = () => {
 }
 
 const redirectPage = (dObj: any, page: String) => {
-  console.log("NAV reeirect to => " + page)
+  //console.log("NAV reeirect to => " + page)
     emit('redirectPage', dObj, page)
 }
 

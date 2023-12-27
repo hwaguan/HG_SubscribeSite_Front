@@ -12,7 +12,7 @@
       login: dailogType == 'login'
     }"
   >
-    <component :is="showComponent" :reset="dataReset" @callBack="contactPostBack"></component>
+    <component :is="showComponent" :reset="dataReset" @callBack="contactPostBack" @loadingSwitch="loadingSwitch" @closeDailog="closeDailog"></component>
   </div>
 </template>
 
@@ -137,9 +137,10 @@ let props = defineProps({
   showType: String
 })
 
-const emit = defineEmits(['callDailog'])
+const emit = defineEmits(['callDailog', 'loadingSwitch'])
 
 const closeDailog = () => {
+  console.log("closeDailog")
   if (dailogType.value === 'contact') {
     if (
       contactData.value.name != '' ||
@@ -186,12 +187,17 @@ const contactPostBack = (dObj: any, page: String) => {
   }
 }
 
+const loadingSwitch = (status: boolean) => {
+    //console.log("=== AdminMain loading switch ===")
+    emit('loadingSwitch', status)
+}
+
 watch(
   () => props.showType,
   (before, after) => {
     let st = '' + props.showType
     dailogType.value = st
-    console.log(dailogType.value)
+    //console.log(dailogType.value)
 
     switch (st) {
       case 'intro':

@@ -166,7 +166,7 @@ let empDataModel = ref("" + props.mAuth)
 
 watch(() => props.mAuth, (after, before) => {
     empDataModel.value = "" + after
-    console.log("mAuth ==> " + after)
+    //console.log("mAuth ==> " + after)
 })
 
 const changeAdmViewRight = (type: string) => {
@@ -188,13 +188,13 @@ const changeAdmViewRight = (type: string) => {
             const editTab = "," + props.authID + "D,"
             const delTab = "," + props.authID + "E,"
 
-            console.log(editTab + " / " + delTab)
+            //console.log(editTab + " / " + delTab)
             empDataModel.value = ((("," + empDataModel.value + ",").replace(editTab, ",")).replace(delTab, ",")).substring(1, empDataModel.value.length - 2)
         }
         if (empDataModel.value == ",") empDataModel.value = ""
     }
 
-    console.log(empDataModel.value)
+    //console.log(empDataModel.value)
     emit('authChange', empDataModel.value)
 }
 </script>

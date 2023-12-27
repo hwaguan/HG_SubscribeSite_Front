@@ -420,17 +420,17 @@ const props = defineProps({
 
 watch(() => props.lastPage, (before, after) => {
     currentPage.value = after != null ? after : 1
-    console.log("Back to last page ==> " + currentPage.value)
+    //console.log("Back to last page ==> " + currentPage.value)
 })
 
 const queryData = async (setPage: number, setRows: number) => {
     loadingSwitch(true)
     const queryResult: any = await api.callAPI(groupListPath, { page: setPage, rows: setRows, showAll: showAll.value })
     groupList.value = queryResult.message
-    console.log(groupList.value)
-    console.log("gCount => " + groupList.value.length + " / showRows => " + showRows.value)
+    //console.log(groupList.value)
+    //console.log("gCount => " + groupList.value.length + " / showRows => " + showRows.value)
     totalPage.value = Math.ceil(groupList.value.length / showRows.value)
-    console.log("total page ===> " + totalPage.value)
+    //console.log("total page ===> " + totalPage.value)
     groupCount.value = groupList.value.length
 
     rangeStart.value = totalPage.value < 5 ? 1 : Math.floor(currentPage.value / 5) * 5;
@@ -463,8 +463,8 @@ const removeGroup = (gid: number, gName: string) => {
             const removeAuth = async () => {
                 loadingSwitch(true)
                 const queryResult: any = await api.callAPI(groupRemovePath, { agID: gid })
-                console.log("remove result ===> ")
-                console.log(queryResult)
+                //console.log("remove result ===> ")
+                //console.log(queryResult)
                 loadingSwitch(false)
 
                 queryData(currentPage.value, showRows.value)
@@ -495,8 +495,8 @@ const reviveGroup = (gid: number, gName: string) => {
             const reviveAuth = async () => {
                 loadingSwitch(true)
                 const queryResult: any = await api.callAPI(groupRemovePath, { agID: gid })
-                console.log("revive result ===> ")
-                console.log(queryResult)
+                //console.log("revive result ===> ")
+                //console.log(queryResult)
                 loadingSwitch(false)
 
                 queryData(currentPage.value, showRows.value)
@@ -515,7 +515,7 @@ const showRemovedData = () => {
 }
 
 const loadingSwitch = (status: boolean) => {
-    console.log("=== AdminManagerList loading switch ===")
+    //console.log("=== AdminManagerList loading switch ===")
     emit('loadingSwitch', status)
 }
 

@@ -559,7 +559,7 @@ const changeMT = (MT: number) => {
 const switchCase = (cid: number) => {
   pickedItem.value = cid < 1 ? 5 : cid > 5 ? 1 : cid
 
-  console.log('switchCase => ' + pickedItem.value)
+  //console.log('switchCase => ' + pickedItem.value)
   switch (pickedItem.value) {
     case 1:
       activeCase.value = credit
@@ -586,7 +586,7 @@ watch(
   //頁面重新開啟時清空輸入格與錯誤狀態
   () => currentSlide,
   (before, after) => {
-    console.log(before + ' => ' + after)
+    //console.log(before + ' => ' + after)
     switch (after.value) {
       case 1:
         activeCase.value = credit

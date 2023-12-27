@@ -6,6 +6,7 @@ const HostLoc = 1 //0 local, 1 production
 export const sysConfig = defineStore({
   id: 'sysConfig',
   state: () => ({
+    GoogleClientID: "164923720779-ngbah69trn13rlu25non5cc6dojaftdb.apps.googleusercontent.com",
     hostPath: HostLoc < 1 ? LocalAPIPath : ProductionAPIPath,
     loginPath: 'login',
     adminLoginPath: 'Admin/login',
@@ -15,6 +16,7 @@ export const sysConfig = defineStore({
     adminManagerTotalPath: 'Admin/getManagerTotal',
     adminManagerListPath: 'Admin/getManagerList',
     adminManagerQueryPath: 'Admin/getAdminManager',
+    adminManagerUpdatePath: 'Admin/updateManager',
     adminManagerRemovePath: 'Admin/removeManager',
     adminManagerRevivePath: 'Admin/reviveManager',
     adminGroupListPath: 'Admin/getGroupList',
@@ -24,6 +26,8 @@ export const sysConfig = defineStore({
     adminGroupRevivePath: 'Admin/reviveAuthGroup',
     adminGroupModifyPath: 'Admin/updateAdminGroup',
     adminUpdateManagerPath: 'Admin/updateManager',
+    memberLoginPath: 'Member/login',
+    googleLoginPath: 'Member/googleLogin',
     tokenPath: 'Secret/getTransferToken',
     zipCodeMapping: [
       {

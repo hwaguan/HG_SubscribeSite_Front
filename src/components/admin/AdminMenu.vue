@@ -1,61 +1,30 @@
 <template>
   <div class="menuContainer">
-    <div
-      class="mainMenuItem"
-      v-for="(mmItem, index) in menuObj"
-      :key="index"
-      @mouseover="mmItem.Mov = true"
-      @mouseout="mmItem.Mov = false"
-      :class="{ mainMenuItemMov: mmItem.Mov && !mmItem.Hit, mainMenuItemHit: mmItem.Hit }"
-    >
+    <div class="mainMenuItem" v-for="(mmItem, index) in menuObj" :key="index" @mouseover="mmItem.Mov = true"
+      @mouseout="mmItem.Mov = false" :class="{ mainMenuItemMov: mmItem.Mov && !mmItem.Hit, mainMenuItemHit: mmItem.Hit }">
       <div class="mainMenuItemContainer" @click="hitMainMenu(mmItem)">
         <div class="menuItemText">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-house-fill homeIcon"
-            viewBox="0 0 16 16"
-            v-if="index == 0"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-house-fill homeIcon" viewBox="0 0 16 16" v-if="index == 0">
             <path
-              d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"
-            />
-            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z" /></svg><span v-html="mmItem.Text"></span>
+              d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z" />
+            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z" />
+          </svg><span v-html="mmItem.Text"></span>
         </div>
         <div class="switchBtnCase">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            fill="currentColor"
-            class="bi bi-triangle-fill"
-            viewBox="0 0 16 16"
-            v-if="mmItem.SubMenu"
-            :class="{ btnSwitchOff: !mmItem.Open }"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M7.022 1.566a1.13 1.13 0 0 1 1.96 0l6.857 11.667c.457.778-.092 1.767-.98 1.767H1.144c-.889 0-1.437-.99-.98-1.767L7.022 1.566z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-triangle-fill"
+            viewBox="0 0 16 16" v-if="mmItem.SubMenu" :class="{ btnSwitchOff: !mmItem.Open }">
+            <path fill-rule="evenodd"
+              d="M7.022 1.566a1.13 1.13 0 0 1 1.96 0l6.857 11.667c.457.778-.092 1.767-.98 1.767H1.144c-.889 0-1.437-.99-.98-1.767L7.022 1.566z" />
           </svg>
         </div>
       </div>
       <div class="subMenu" :class="[{ openSub: mmItem.Open }, 'subMenu_' + index]">
-        <div
-          class="subMenuItem"
-          v-for="(smItem, index2) in mmItem.SubMenu"
-          :key="index2"
-          @mouseover="smItem.Mov = true"
-          @mouseout="smItem.Mov = false"
-        >
-          <div
-            class="subMenuItemText"
-            v-html="smItem.Text"
+        <div class="subMenuItem" v-for="(smItem, index2) in mmItem.SubMenu" :key="index2" @mouseover="smItem.Mov = true"
+          @mouseout="smItem.Mov = false">
+          <div class="subMenuItemText" v-html="smItem.Text"
             :class="{ subMenuItemMov: smItem.Mov && !smItem.Hit, subMenuItemHit: smItem.Hit }"
-            @click="hitSubMenu(smItem)"
-          ></div>
+            @click="hitSubMenu(smItem)"></div>
         </div>
       </div>
     </div>
@@ -116,12 +85,10 @@
         .subMenuItemText {
           border: 10px solid;
           border-image-slice: 1;
-          border-image-source: linear-gradient(
-            to left,
-            transparent 0% 100%,
-            #743ad5 0% 0%,
-            #d53a9d 0% 0%
-          );
+          border-image-source: linear-gradient(to left,
+              transparent 0% 100%,
+              #743ad5 0% 0%,
+              #d53a9d 0% 0%);
           border-width: 2px;
           border-top: 0;
           border-left: 0;
@@ -172,7 +139,7 @@ const config = sysConfig()
 const admID = JSON.parse('' + sessionStorage.getItem('adminInfo')).admID
 const api = new apiProcdure()
 const getMenuURL = config.hostPath + config.adminMenuPath
-const emit = defineEmits(['redirectPage'])
+const emit = defineEmits(['redirectPage', 'loadingSwitch'])
 let menuObj = ref<any>()
 const homeObj = [{ Action: 'Home', Text: '首頁', Hit: true, Mov: false, Open: false }]
 let mainMenuLastHit = ref<any>(homeObj[0])
@@ -180,7 +147,7 @@ let subMenuLastHit = ref<any>(null)
 
 const getAdminMenu = async () => {
   const posVals = { mid: admID }
-  
+
   const resultObj: any = await api.callAPI(getMenuURL, posVals)
   menuObj.value = resultObj.message
 
@@ -209,7 +176,7 @@ const hitMainMenu = (menuObj: any) => {
       if (mainMenuLastHit.value != null) mainMenuLastHit.value.Hit = false
       menuObj.Hit = true
       mainMenuLastHit.value = menuObj
-      console.log("hit menu ==> " + menuObj.Action)
+      //console.log("hit menu ==> " + menuObj.Action)
       emit('redirectPage', null, menuObj.Action)
     }
   } else {
@@ -225,8 +192,12 @@ const hitSubMenu = (menuObj: any) => {
     menuObj.Hit = true
     subMenuLastHit.value = menuObj
 
-    console.log("hit menu ==> " + menuObj.Action)
+    //console.log("hit menu ==> " + menuObj.Action)
     emit('redirectPage', null, menuObj.Action)
   }
+}
+
+const loadingSwitch = (status: boolean) => {
+    emit('loadingSwitch', status)
 }
 </script>

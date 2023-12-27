@@ -147,8 +147,8 @@ const alarm = new sysAlarm()
 const dec = new cryptor()
 const api = new apiProcdure()
 
-console.log(config.hostPath + config.tokenPath)
-console.log(axios)
+//console.log(config.hostPath + config.tokenPath)
+//console.log(axios)
 
 let loginInfo = ref({
   userName: '',

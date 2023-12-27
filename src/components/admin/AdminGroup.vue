@@ -22,15 +22,15 @@ let lastPage = ref(1)
 const emit = defineEmits(['loadingSwitch'])
 
 const redirectPage = (dObj: any, page: String) => {
-    console.log("Action Value ==> ")
-    console.log(dObj)
+    //console.log("Action Value ==> ")
+    //console.log(dObj)
     showComponent.value = page == 'modify' ? edit : list
     groupObj.value = dObj.groupObj
     lastPage.value = dObj.lastPage
 }
 
 const loadingSwitch = (status: boolean) => {
-    console.log("=== AdminManager loading switch ===")
+    //console.log("=== AdminManager loading switch ===")
     emit('loadingSwitch', status)
 }
 

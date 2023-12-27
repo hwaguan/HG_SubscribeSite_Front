@@ -2,7 +2,7 @@
   <loading :status="showLoading"></loading>
   <div class="mainContainer" @scroll="scrolling" :class="{ hideScroll: dailogType != '' }">
     <div ref="appTop"></div>
-    <Dailog :showType="dailogType" :data="dailogData" @callDailog="showDailog" />
+    <Dailog :showType="dailogType" :data="dailogData" @callDailog="showDailog" @loadingSwitch="loadingSwitch" />
     <div class="topNav" v-if="!administration">
       <div class="mainNavContainer" :class="{ hideNav: scrollDown }">
         <div class="mainNav">
@@ -542,7 +542,7 @@ const scrolling = (e: any) => {
   }
 
   if (scrollTop + clientHeight >= scrollHeight) {
-    console.log('Yay!')
+    //console.log('Yay!')
     bottom.value = true
   } else {
     bottom.value = false
@@ -551,8 +551,8 @@ const scrolling = (e: any) => {
 }
 
 const showDailog = (data: any, DT: string) => {
-  console.log('DT => ' + DT + ' , data => ' + data)
-  console.log('member name => ' + sessionStorage.getItem('memberName'))
+  //console.log('DT => ' + DT + ' , data => ' + data)
+  //console.log('member name => ' + sessionStorage.getItem('memberName'))
   showMobileNav.value = false
   showMobileNavSubMenu.value = false
   dailogType.value = DT
@@ -613,7 +613,7 @@ const confirmLogout = () => {
 }
 
 const loadingSwitch = (status: boolean) => {
-  console.log("=== app loadingSwitch ===")
+  //console.log("=== app loadingSwitch ===")
   showLoading.value = status
 }
 

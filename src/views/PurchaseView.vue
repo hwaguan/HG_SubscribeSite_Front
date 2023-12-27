@@ -1522,7 +1522,7 @@ let inputWarning = ref({
 let screenWidth = ref(screen.width)
 let screenHeight = ref(screen.height)
 
-console.log(screenWidth.value + ' , ' + screenHeight.value)
+//console.log(screenWidth.value + ' , ' + screenHeight.value)
 const ImgPath = location.href.indexOf('localhost') > -1 ? '../src/assets/images/' : '/assets/'
 let tempFrontBG = ref("url('" + ImgPath + "idFrontBG.png')")
 let tempBackBG = ref("url('" + ImgPath + "idBackBG.png')")
@@ -1543,27 +1543,27 @@ newebPayCryptor.setReturnURL('https://www.hwa-guan.com.tw')
 newebPayCryptor.setBackURL('https://www.hwa-guan.com.tw')
 paymentInfo = newebPayCryptor.encrypt()
 
-console.log(paymentInfo)
+//console.log(paymentInfo)
 
-console.log(newebPayCryptor.decrypt(paymentInfo))
+//console.log(newebPayCryptor.decrypt(paymentInfo))
 
 const formatPrice = (value: number) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
 const iAnswer = (question: number, answer: number) => {
-  console.log('iAnswer')
-  console.log(question + ' , ' + answer)
-  console.log(answerSheet.value.investment)
+  //console.log('iAnswer')
+  //console.log(question + ' , ' + answer)
+  //console.log(answerSheet.value.investment)
   answerSheet.value.investment[question][0] = answer < 10 ? '0' + answer : '' + answer
 }
 
 const iAnswer2 = (question: number, answer: number) => {
-  console.log('iAnswer2')
-  console.log(question + ' , ' + answer)
-  console.log(answerSheet.value.investment)
+  //console.log('iAnswer2')
+  //console.log(question + ' , ' + answer)
+  //console.log(answerSheet.value.investment)
   const answerText = answer < 10 ? '0' + answer : '' + answer
-  console.log(answerSheet.value.investment[question][answer - 1])
+  //console.log(answerSheet.value.investment[question][answer - 1])
   answerSheet.value.investment[question][answer - 1] =
     typeof answerSheet.value.investment[question][answer - 1] == 'undefined' ||
     answerSheet.value.investment[question][answer - 1] == ''
@@ -1577,7 +1577,7 @@ const changeCountry = (country: string) => {
 }
 
 const changeSubType = () => {
-  console.log(config.jobs[parseInt(answerSheet.value.character.occA) - 1])
+  //console.log(config.jobs[parseInt(answerSheet.value.character.occA) - 1])
   occBGroup.value = config.jobs[parseInt(answerSheet.value.character.occA) - 1].subType
   answerSheet.value.character.occB = '01'
 }
@@ -1611,7 +1611,7 @@ const dropBack = (e: any) => {
 }
 
 const getFileB64 = (side: string, file: any, fileSize: number) => {
-  console.log(file.type)
+  //console.log(file.type)
   if (file.type == 'image/jpeg' || file.type == 'image/png' || file.type == 'image/gif') {
     if (fileSize * 1024 > 512000) {
       const fileSizeText = fileSize < 1024 ? fileSize + 'k' : Math.floor(fileSize / 1024) + 'M'
@@ -1637,7 +1637,7 @@ const getFileB64 = (side: string, file: any, fileSize: number) => {
             if (side == 'front') {
               //tempFrontImg.value.style = "background : url('" + evt.target.result + "'')"
               tempFrontBG.value = "url('" + evt?.target?.result + "')"
-              console.log(tempFrontImg.value)
+              //console.log(tempFrontImg.value)
               answerSheet.value.userInfo.idFront = ('' + evt?.target?.result).replace(
                 'data:' + file.type + ';base64,',
                 ''
@@ -1651,7 +1651,7 @@ const getFileB64 = (side: string, file: any, fileSize: number) => {
                 ''
               )
             }
-            console.log(answerSheet.value.userInfo)
+            //console.log(answerSheet.value.userInfo)
           } else {
             swal.fire({
               icon: 'warning',
@@ -1680,16 +1680,12 @@ const getFileB64 = (side: string, file: any, fileSize: number) => {
 const imgFileChange = (e: any) => {
   const side = e.srcElement.className.replace('filePicker', '').toLowerCase()
   const pickedFile = e.target.files[0]
-  console.log(side)
+  //console.log(side)
   getFileB64(side, pickedFile, pickedFile.size / 1024)
 }
 
-const scrollRolling = (e: any) => {
-  console.log(e.scrollTop)
-}
-
 const changeCVC = (e: any) => {
-  console.log(e.keyCode)
+  //console.log(e.keyCode)
   if ((e.keyCode < 48 || e.keyCode > 57) && (e.keyCode < 96 || e.keyCode > 105) && e.keyCode != 8)
     e.preventDefault()
 }

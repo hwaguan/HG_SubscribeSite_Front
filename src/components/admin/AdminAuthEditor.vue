@@ -71,11 +71,11 @@ const authChange = (authStr: string) => {
 
 watch(() => props.mAuth, (after, before) => {
     empDataModel.value = "" + after
-    console.log("empDataModel changed !!")
+    //console.log("empDataModel changed !!")
 })
 
 const loadingSwitch = (status: boolean) => {
-    console.log("=== AdminManagerList loading switch ===")
+    //console.log("=== AdminManagerList loading switch ===")
     emit('loadingSwitch', status)
 }
 
@@ -87,8 +87,8 @@ const queryMenu = async () => {
     loadingSwitch(false)
     menuObj.value = resultObj.message
 
-    console.log(resultObj.message)
-    console.log(menuObj.value)
+    //console.log(resultObj.message)
+    //console.log(menuObj.value)
 }
 
 queryMenu()

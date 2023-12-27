@@ -29,7 +29,7 @@ if (isAdmin) AdminInfo.value = JSON.parse('' + sessionStorage.getItem('adminInfo
 const emit = defineEmits(['loadingSwitch'])
 const redirectPage = (dObj: any, page: string) => {
   if (page != null) {
-    console.log('AdminView redirect to ==> ' + page)
+    //console.log('AdminView redirect to ==> ' + page)
 
     switch (page) {
       case 'main':
@@ -40,7 +40,7 @@ const redirectPage = (dObj: any, page: string) => {
         showComponent.value = login
         break
       default:
-        console.log(page)
+        //console.log(page)
         goFunc.value = page
         break
     }
@@ -48,7 +48,7 @@ const redirectPage = (dObj: any, page: string) => {
 }
 
 const loadingSwitch = (status: boolean) => {
-    console.log("=== AdminView loading switch ===")
+    //console.log("=== AdminView loading switch ===")
     emit('loadingSwitch', status)
 }
 

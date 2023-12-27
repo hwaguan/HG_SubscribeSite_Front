@@ -161,7 +161,7 @@ const pageTags = ref(['服務條款', '內容授權', '隱私權政策', '合作
 //點擊下一頁按
 const moveNext = () => {
   let nextPage = currentSlide.value + 1
-  console.log(nextPage)
+  //console.log(nextPage)
   if (nextPage > 4) nextPage = 0
   currentSlide.value = nextPage
   changeContent(nextPage)
@@ -170,7 +170,7 @@ const moveNext = () => {
 //點擊上一頁按
 const moveLast = () => {
   let lastPage = currentSlide.value - 1
-  console.log(lastPage)
+  //console.log(lastPage)
   if (lastPage < 0) lastPage = 4
   currentSlide.value = lastPage
   changeContent(lastPage)
@@ -187,7 +187,7 @@ watch(
   () => props.reset,
   (before, after) => {
     let pickedPage = eval('' + props.reset)
-    console.log('picked page => ' + props.reset)
+    //console.log('picked page => ' + props.reset)
     currentSlide.value = pickedPage
     changeContent(props.reset)
   }
