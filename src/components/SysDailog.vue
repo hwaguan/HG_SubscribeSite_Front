@@ -12,7 +12,7 @@
       login: dailogType == 'login'
     }"
   >
-    <component :is="showComponent" :reset="dataReset" @callBack="contactPostBack" @loadingSwitch="loadingSwitch" @closeDailog="closeDailog"></component>
+    <component :is="showComponent" :reset="dataReset" @callBack="contactPostBack" @loadingSwitch="loadingSwitch" @closeDailog="closeDailog" @memberStatusChange="memberLogin"></component>
   </div>
 </template>
 
@@ -137,7 +137,7 @@ let props = defineProps({
   showType: String
 })
 
-const emit = defineEmits(['callDailog', 'loadingSwitch'])
+const emit = defineEmits(['callDailog', 'loadingSwitch', 'memberStatusChange'])
 
 const closeDailog = () => {
   console.log("closeDailog")
@@ -190,6 +190,10 @@ const contactPostBack = (dObj: any, page: String) => {
 const loadingSwitch = (status: boolean) => {
     //console.log("=== AdminMain loading switch ===")
     emit('loadingSwitch', status)
+}
+
+const memberLogin = (logined : boolean) => {
+  emit('memberStatusChange', logined)
 }
 
 watch(

@@ -29,56 +29,24 @@
         <div>依據【投信投顧法規第八十三條】投顧需簽訂證券投資顧問契約，載明雙方權利義務。</div>
       </div>
     </div>
-    <div class="procdureBar">
-      <div class="procdureStepContainer">
-        <div
-          class="procdureStepText"
-          v-for="(step, index) in procdureSteps"
-          :key="index"
-          :class="{
-            stepPass: step.procdureIndex < currentPurchaseStep,
-            stepNow: step.procdureIndex == currentPurchaseStep
-          }"
-        >
-          {{ step.procdureText }}
-        </div>
+    <procdureBar :stepChange="currentPurchaseStep" @totalSteps="setProcdureSteps"></procdureBar>
+    <div class="stepContainer personalData" v-if="currentPurchaseStep == 0">
+      <div class="procdureStepHeaderText">
+        商品確認<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </svg>
       </div>
-      <div class="procdureLineContainer">
-        <div class="procdureStep" v-for="(step, index) in procdureSteps" :key="index">
-          <div
-            class="procdureLine"
-            :class="{
-              linePass: step.procdureIndex <= currentPurchaseStep,
-              lineNext: step.procdureIndex > currentPurchaseStep
-            }"
-            v-if="index > 0"
-          ></div>
-          <div class="procdureDot">
-            <div
-              class="procdureDot"
-              :class="{
-                dotNow: step.procdureIndex == currentPurchaseStep,
-                dotNext: step.procdureIndex > currentPurchaseStep,
-                dotPass: step.procdureIndex <= currentPurchaseStep
-              }"
-            ></div>
-          </div>
-        </div>
+      <div class="stepContentContainer">
       </div>
     </div>
-    <div class="stepContainer personalData">
+    <div class="stepContainer personalData" v-if="currentPurchaseStep == 1">
       <div class="procdureStepHeaderText">
-        個人資料填寫<svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-check-circle-fill"
-          viewBox="0 0 16 16"
-        >
+        個人資料填寫<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-check-circle-fill" viewBox="0 0 16 16">
           <path
-            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-          />
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
         </svg>
       </div>
       <div class="stepContentContainer">
@@ -86,12 +54,7 @@
           <div class="PDContainer nameContainer">
             <div class="PDTitle">姓名</div>
             <div class="PDContent">
-              <input
-                type="text"
-                maxlength="5"
-                v-model="answerSheet.userInfo.name"
-                placeholder="請輸入您的中文姓名"
-              />
+              <input type="text" maxlength="5" v-model="answerSheet.userInfo.name" placeholder="請輸入您的中文姓名" />
             </div>
             <div></div>
             <div class="warningText">
@@ -104,18 +67,12 @@
             <div class="PDTitle">性別</div>
             <div class="PDContent">
               <div class="btnGenderCase">
-                <div
-                  class="btnGender btnFemale"
-                  :class="{ btnFemaleActive: answerSheet.userInfo.gender == 0 }"
-                  @click="answerSheet.userInfo.gender = 0"
-                >
+                <div class="btnGender btnFemale" :class="{ btnFemaleActive: answerSheet.userInfo.gender == 0 }"
+                  @click="answerSheet.userInfo.gender = 0">
                   生理女
                 </div>
-                <div
-                  class="btnGender btnMale"
-                  :class="{ btnMaleActive: answerSheet.userInfo.gender == 1 }"
-                  @click="answerSheet.userInfo.gender = 1"
-                >
+                <div class="btnGender btnMale" :class="{ btnMaleActive: answerSheet.userInfo.gender == 1 }"
+                  @click="answerSheet.userInfo.gender = 1">
                   生理男
                 </div>
               </div>
@@ -124,12 +81,7 @@
           <div class="PDContainer idContainer">
             <div class="PDTitle">身份證字號</div>
             <div class="PDContent">
-              <input
-                type="text"
-                maxlength="10"
-                v-model="answerSheet.userInfo.IDNO"
-                placeholder="請輸入您的身份證字號"
-              />
+              <input type="text" maxlength="10" v-model="answerSheet.userInfo.IDNO" placeholder="請輸入您的身份證字號" />
             </div>
             <div></div>
             <div class="warningText">
@@ -141,12 +93,7 @@
           <div class="PDContainer mobileContainer">
             <div class="PDTitle">手機</div>
             <div class="PDContent">
-              <input
-                type="text"
-                maxlength="10"
-                v-model="answerSheet.userInfo.mobile"
-                placeholder="請輸入您的手機"
-              />
+              <input type="text" maxlength="10" v-model="answerSheet.userInfo.mobile" placeholder="請輸入您的手機" />
             </div>
             <div></div>
             <div class="warningText">
@@ -158,11 +105,7 @@
           <div class="PDContainer idContainer">
             <div class="PDTitle">Email</div>
             <div class="PDContent">
-              <input
-                type="text"
-                v-model="answerSheet.userInfo.email"
-                placeholder="請輸入您的 e-mail"
-              />
+              <input type="text" v-model="answerSheet.userInfo.email" placeholder="請輸入您的 e-mail" />
             </div>
             <div></div>
             <div class="warningText">
@@ -181,37 +124,25 @@
                   <div class="addressZip">{{ answerSheet.userInfo.zip }}</div>
                   <div class="addressCity">
                     <select v-model="answerSheet.userInfo.city" @change="changeCity">
-                      <option
-                        :value="city.name"
-                        v-for="(city, index) in config.zipCodeMapping"
-                        :key="index"
-                      >
+                      <option :value="city.name" v-for="(city, index) in config.zipCodeMapping" :key="index">
                         {{ city.name }}
                       </option>
                     </select>
                   </div>
                   <div class="addressCounty">
                     <select v-model="answerSheet.userInfo.county" @change="changeCounty">
-                      <option
-                        :value="county.name"
-                        v-for="(county, index) in config.zipCodeMapping[
-                          config.zipCodeMapping.findIndex(
-                            (x) => x.name == answerSheet.userInfo.city
-                          )
-                        ].area"
-                        :key="index"
-                      >
+                      <option :value="county.name" v-for="(county, index) in config.zipCodeMapping[
+                        config.zipCodeMapping.findIndex(
+                          (x) => x.name == answerSheet.userInfo.city
+                        )
+                      ].area" :key="index">
                         {{ county.name }}
                       </option>
                     </select>
                   </div>
                 </div>
                 <div class="addressSecond">
-                  <input
-                    type="text"
-                    v-mode="answerSheet.userInfo.address"
-                    placeholder="請輸入您的地址"
-                  />
+                  <input type="text" v-model="answerSheet.userInfo.address" placeholder="請輸入您的地址" />
                 </div>
               </div>
             </div>
@@ -234,12 +165,8 @@
                 <div class="idPhotoFront">
                   <div class="previewImgFront">
                     <label>
-                      <div
-                        class="coverImg idFront"
-                        @drop.prevent="dropFront"
-                        @dragover.prevent="frontDragOver = true"
-                        @dragleave.prevent="frontDragOver = true"
-                      >
+                      <div class="coverImg idFront" @drop.prevent="dropFront" @dragover.prevent="frontDragOver = true"
+                        @dragleave.prevent="frontDragOver = true">
                         <input type="file" class="filePickerFront" @change="imgFileChange" />
                       </div>
                     </label>
@@ -248,12 +175,8 @@
                 <div class="idPhotoBack">
                   <div class="previewImgBack">
                     <label>
-                      <div
-                        class="coverImg idBack"
-                        @drop.prevent="dropBack"
-                        @dragover.prevent="backDragOver = true"
-                        @dragleave.prevent="backDragOver = true"
-                      >
+                      <div class="coverImg idBack" @drop.prevent="dropBack" @dragover.prevent="backDragOver = true"
+                        @dragleave.prevent="backDragOver = true">
                         <input type="file" class="filePickerBack" @change="imgFileChange" />
                       </div>
                     </label>
@@ -265,84 +188,52 @@
         </div>
       </div>
     </div>
-    <div class="stepContainer investmentType">
+    <div class="stepContainer investmentType" v-if="currentPurchaseStep == 2">
       <div class="procdureStepHeaderText">
-        投資屬性調查<svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-check-circle-fill"
-          viewBox="0 0 16 16"
-        >
+        投資屬性調查<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-check-circle-fill" viewBox="0 0 16 16">
           <path
-            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-          />
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
         </svg>
       </div>
       <div class="stepContentContainer">
-        <div
-          class="investmentQuestionLine"
-          v-for="(iQuest, index) in investmentQuestions"
-          :key="index"
-        >
+        <div class="investmentQuestionLine" v-for="(iQuest, index) in investmentQuestions" :key="index">
           <div class="questNo">Q{{ index + 1 }}</div>
           <div class="questNo">{{ iQuest.question }}</div>
           <div></div>
           <div class="answerContainer">
-            <div
-              class="answerLine"
-              :class="{
-                answerLine_picked:
-                  parseInt(
-                    answerSheet.investment[index][
-                      index < investmentQuestions.length - 1 ? 0 : index2
-                    ]
-                  ) ==
-                  index2 + 1
-              }"
-              v-for="(answer, index2) in iQuest.answers"
-              :key="index2"
-              @click="
-                index < investmentQuestions.length - 1
-                  ? iAnswer(index, index2 + 1)
-                  : iAnswer2(index, index2 + 1)
-              "
-            >
-              <div
-                class="answerDot"
-                :class="{
-                  answerDot_picked: parseInt(answerSheet.investment[index][0]) == index2 + 1
-                }"
-                v-if="index < investmentQuestions.length - 1"
-              ></div>
-              <div
-                class="answerSquare"
-                :class="{
-                  answerSquare_picked:
-                    parseInt('0' + answerSheet.investment[index][index2]) == index2 + 1
-                }"
-                v-if="index == investmentQuestions.length - 1"
-              ></div>
+            <div class="answerLine" :class="{
+              answerLine_picked:
+                parseInt(
+                  answerSheet.investment[index][
+                  index < investmentQuestions.length - 1 ? 0 : index2
+                  ]
+                ) ==
+                index2 + 1
+            }" v-for="(answer, index2) in iQuest.answers" :key="index2" @click="
+  index < investmentQuestions.length - 1
+    ? iAnswer(index, index2 + 1)
+    : iAnswer2(index, index2 + 1)
+  ">
+              <div class="answerDot" :class="{
+                answerDot_picked: parseInt(answerSheet.investment[index][0]) == index2 + 1
+              }" v-if="index < investmentQuestions.length - 1"></div>
+              <div class="answerSquare" :class="{
+                answerSquare_picked:
+                  parseInt('0' + answerSheet.investment[index][index2]) == index2 + 1
+              }" v-if="index == investmentQuestions.length - 1"></div>
               <div class="answerItem">{{ answer }}</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="stepContainer characterType">
+    <div class="stepContainer characterType" v-if="currentPurchaseStep == 3">
       <div class="procdureStepHeaderText">
-        盡職調查<svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-check-circle-fill"
-          viewBox="0 0 16 16"
-        >
+        盡職調查<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-check-circle-fill" viewBox="0 0 16 16">
           <path
-            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-          />
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
         </svg>
       </div>
       <div class="stepContentContainer">
@@ -351,37 +242,19 @@
           <div class="questNo">是否具有政治人物身份</div>
           <div></div>
           <div class="answerContainer">
-            <div
-              class="answerLine"
-              :class="{ answerLine_picked: answerSheet.character.politics == '1' }"
-              @click="answerSheet.character.politics = '1'"
-            >
-              <div
-                class="answerDot"
-                :class="{ answerDot_picked: answerSheet.character.politics == '1' }"
-              ></div>
+            <div class="answerLine" :class="{ answerLine_picked: answerSheet.character.politics == '1' }"
+              @click="answerSheet.character.politics = '1'">
+              <div class="answerDot" :class="{ answerDot_picked: answerSheet.character.politics == '1' }"></div>
               <div class="answerItem">無</div>
             </div>
-            <div
-              class="answerLine"
-              :class="{ answerLine_picked: answerSheet.character.politics == '2' }"
-              @click="answerSheet.character.politics = '2'"
-            >
-              <div
-                class="answerDot"
-                :class="{ answerDot_picked: answerSheet.character.politics == '2' }"
-              ></div>
+            <div class="answerLine" :class="{ answerLine_picked: answerSheet.character.politics == '2' }"
+              @click="answerSheet.character.politics = '2'">
+              <div class="answerDot" :class="{ answerDot_picked: answerSheet.character.politics == '2' }"></div>
               <div class="answerItem">非現職高知名度政治人物(PEPs)及其家庭成員或密切關係之人</div>
             </div>
-            <div
-              class="answerLine"
-              :class="{ answerLine_picked: answerSheet.character.politics == '3' }"
-              @click="answerSheet.character.politics = '3'"
-            >
-              <div
-                class="answerDot"
-                :class="{ answerDot_picked: answerSheet.character.politics == '3' }"
-              ></div>
+            <div class="answerLine" :class="{ answerLine_picked: answerSheet.character.politics == '3' }"
+              @click="answerSheet.character.politics = '3'">
+              <div class="answerDot" :class="{ answerDot_picked: answerSheet.character.politics == '3' }"></div>
               <div class="answerItem">
                 現職高知名度政治人物(PEPs)及其家庭成員或密切關係之人或仍具影響力之非現職高知名度政治人物(PEPs)及其家庭成員或密切關係之人
               </div>
@@ -393,32 +266,20 @@
           <div class="questNo">您的國籍</div>
           <div></div>
           <div class="answerContainer countryPicker">
-            <input
-              type="text"
-              v-model="answerSheet.character.citizenship"
-              @focus="countryOnChange = true"
-              @blur="changeCountry(mouseOnCountry)"
-            />
+            <input type="text" v-model="answerSheet.character.citizenship" @focus="countryOnChange = true"
+              @blur="changeCountry(mouseOnCountry)" />
             <div class="countriesContainer" :class="{ countriesList_show: countryOnChange }">
               <div class="countryOptionList">
-                <div
-                  class="countryOption"
-                  v-for="(country, index) in config.contries.filter((country) => {
-                    return (
-                      country.text
-                        .toLowerCase()
-                        .indexOf(answerSheet.character.citizenship.toLowerCase()) > -1
-                    )
-                  })"
-                  :key="index"
-                  @click="changeCountry(country.text)"
-                  @mouseover="mouseOnCountry = country.text"
-                  @mouseout="mouseOnCountry = ''"
-                >
-                  <img
-                    class="md-country-picker-flag"
-                    :src="'https://img.mobiscroll.com/demos/flags/' + country.value + '.png'"
-                  />{{ country.text }}
+                <div class="countryOption" v-for="(country, index) in config.contries.filter((country) => {
+                  return (
+                    country.text
+                      .toLowerCase()
+                      .indexOf(answerSheet.character.citizenship.toLowerCase()) > -1
+                  )
+                })" :key="index" @click="changeCountry(country.text)" @mouseover="mouseOnCountry = country.text"
+                  @mouseout="mouseOnCountry = ''">
+                  <img class="md-country-picker-flag"
+                    :src="'https://img.mobiscroll.com/demos/flags/' + country.value + '.png'" />{{ country.text }}
                 </div>
               </div>
             </div>
@@ -431,29 +292,19 @@
           <div class="answerContainer jobPicker">
             <div class="jobType">
               <select v-model="answerSheet.character.occA" @change="changeSubType">
-                <option
-                  :value="index < 10 ? '0' + (index + 1) : index + 1"
-                  v-for="(job, index) in config.jobs"
-                  :key="index"
-                >
+                <option :value="index < 10 ? '0' + (index + 1) : index + 1" v-for="(job, index) in config.jobs"
+                  :key="index">
                   {{ job.jobType }}
                 </option>
               </select>
             </div>
             <div class="subType">
-              <div
-                class="answerLine"
-                :class="{ answerLine_picked: parseInt(answerSheet.character.occB) == index + 1 }"
-                v-for="(subType, index) in occBGroup"
-                :key="index"
-                @click="
+              <div class="answerLine" :class="{ answerLine_picked: parseInt(answerSheet.character.occB) == index + 1 }"
+                v-for="(subType, index) in occBGroup" :key="index" @click="
                   answerSheet.character.occB = index < 10 ? '0' + (index + 1) : '' + (index + 1)
-                "
-              >
-                <div
-                  class="answerDot"
-                  :class="{ answerDot_picked: parseInt(answerSheet.character.occB) == index + 1 }"
-                ></div>
+                  ">
+                <div class="answerDot" :class="{ answerDot_picked: parseInt(answerSheet.character.occB) == index + 1 }">
+                </div>
                 <div class="answerItem">{{ subType }}</div>
               </div>
             </div>
@@ -461,19 +312,23 @@
         </div>
       </div>
     </div>
-    <div class="stepContainer tradeAuthorize">
+    <div class="stepContainer personalData" v-if="currentPurchaseStep == 4">
       <div class="procdureStepHeaderText">
-        交易授權<svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-check-circle-fill"
-          viewBox="0 0 16 16"
-        >
+        委任簽署<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-check-circle-fill" viewBox="0 0 16 16">
           <path
-            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-          />
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </svg>
+      </div>
+      <div class="stepContentContainer">
+      </div>
+    </div>
+    <div class="stepContainer tradeAuthorize" v-if="currentPurchaseStep == 5">
+      <div class="procdureStepHeaderText">
+        交易授權<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
         </svg>
       </div>
       <div class="stepContentContainer">
@@ -481,34 +336,14 @@
           <div class="PDContainer cardNoContainer">
             <div class="PDTitle">信用卡卡號</div>
             <div class="PDContent">
-              <input
-                type="text"
-                class="cardNoField"
-                v-memo="answerSheet.userInfo.cvc"
-                maxlength="4"
-                @keydown="changeCardNo"
-              />&nbsp;-
-              <input
-                type="text"
-                class="cardNoField"
-                v-memo="answerSheet.userInfo.cvc"
-                maxlength="4"
-                @keydown="changeCardNo"
-              />&nbsp;-
-              <input
-                type="text"
-                class="cardNoField"
-                v-memo="answerSheet.userInfo.cvc"
-                maxlength="4"
-                @keydown="changeCardNo"
-              />&nbsp;-
-              <input
-                type="text"
-                class="cardNoField"
-                v-memo="answerSheet.userInfo.cvc"
-                maxlength="4"
-                @keydown="changeCardNo"
-              />
+              <input type="text" class="cardNoField" v-memo="answerSheet.userInfo.cvc" maxlength="4"
+                @keydown="changeCardNo" />&nbsp;-
+              <input type="text" class="cardNoField" v-memo="answerSheet.userInfo.cvc" maxlength="4"
+                @keydown="changeCardNo" />&nbsp;-
+              <input type="text" class="cardNoField" v-memo="answerSheet.userInfo.cvc" maxlength="4"
+                @keydown="changeCardNo" />&nbsp;-
+              <input type="text" class="cardNoField" v-memo="answerSheet.userInfo.cvc" maxlength="4"
+                @keydown="changeCardNo" />
             </div>
             <div></div>
             <div class="warningText">
@@ -521,21 +356,12 @@
             <div class="PDTitle">信用卡到期日</div>
             <div class="PDContent" style="padding-top: 3px">
               <select>
-                <option
-                  :value="month < 10 ? '0' + month : month"
-                  v-for="(month, index) in 12"
-                  :key="index"
-                  :selected="month - 1 == today.month"
-                >
-                  {{ month < 10 ? '0' + month : month }}
-                </option></select
-              >&nbsp;
+                <option :value="month < 10 ? '0' + month : month" v-for="(month, index) in 12" :key="index"
+                  :selected="month - 1 == today.month">
+                  {{ month < 10 ? '0' + month : month }} </option>
+              </select>&nbsp;
               <select>
-                <option
-                  :value="(today.year + year - 1).toString().substring(2)"
-                  v-for="(year, index) in 10"
-                  :key="index"
-                >
+                <option :value="(today.year + year - 1).toString().substring(2)" v-for="(year, index) in 10" :key="index">
                   {{ today.year + year - 1 }}
                 </option>
               </select>
@@ -544,13 +370,7 @@
           <div class="PDContainer CVCContainer">
             <div class="PDTitle">安全碼</div>
             <div class="PDContent">
-              <input
-                type="text"
-                class="CVCField"
-                v-memo="answerSheet.userInfo.cvc"
-                maxlength="3"
-                @keydown="changeCVC"
-              />
+              <input type="text" class="CVCField" v-memo="answerSheet.userInfo.cvc" maxlength="3" @keydown="changeCVC" />
             </div>
             <div></div>
             <div class="warningText">
@@ -568,9 +388,29 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="stickyButton">
-    <button type="button">Submit</button>
+    <div class="stepContainer personalData" v-if="currentPurchaseStep == 6">
+      <div class="procdureStepHeaderText">
+        訂閱完成<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </svg>
+      </div>
+      <div class="stepContentContainer">
+      </div>
+    </div>
+    <div class="stepActionContainer">
+      <div class="stepBtnCase" v-if="currentPurchaseStep < procdureSteps - 1">
+        <div class="stepBtn backwardBtn" :class="{ 'stepBtn_disabled': currentPurchaseStep == 0 }" @click="backLastStep">
+          上一步</div>
+        <div class="stepBtn forwardBtn" :class="{ 'stepBtn_disabled': currentPurchaseStep == procdureSteps - 1 }"
+          @click="verifyContent">下一步</div>
+      </div>
+      <div class="stepBtnCase" v-if="currentPurchaseStep == procdureSteps - 1">
+        <div class="stepBtn backwardBtn" @click="router.push('/')">回首頁</div>
+        <div class="stepBtn forwardBtn" @click="router.push('/purchaseRecords')">訂購記錄</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -670,111 +510,11 @@ $width_CVC: v-bind(CVCWidth);
     }
   }
 
-  .procdureBar {
-    width: 100%;
-    padding: 50px 0px;
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-content: center;
-    justify-items: center;
-    display: none;
-
-    .procdureLineContainer {
-      width: calc(var(--main-container-width) - 170px);
-      height: 40px;
-      display: grid;
-      grid-template-columns: 15px repeat(5, 1fr);
-      align-content: center;
-      align-items: center;
-
-      .procdureStep {
-        display: grid;
-        grid-template-columns: auto 15px;
-        align-content: center;
-        align-items: center;
-
-        .procdureDot {
-          height: 15px;
-          width: 15px;
-          border-radius: 99em;
-        }
-
-        .dotPass,
-        .linePass {
-          background: rgba(255, 82, 82, 1);
-        }
-
-        .dotPass {
-          background: url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(255, 255, 255)" class="bi bi-check" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>'),
-            rgb(43, 148, 41);
-          background-repeat: no-repeat;
-          background-position: center;
-        }
-
-        .dotNext,
-        .lineNext {
-          background: rgba(210, 210, 210, 1);
-        }
-
-        .dotNow {
-          background: rgba(255, 82, 82, 1);
-          box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
-          transform: scale(1);
-          animation: pulse-red 2s infinite;
-          position: sticky;
-        }
-
-        .procdureLine {
-          width: 100;
-          height: 5px;
-        }
-      }
-
-      @keyframes pulse-red {
-        0% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
-        }
-
-        70% {
-          transform: scale(1);
-          box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
-        }
-
-        100% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
-        }
-      }
-    }
-
-    .procdureStepContainer {
-      width: var(--main-container-width);
-      letter-spacing: 3px;
-      color: rgb(180, 180, 180);
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      justify-content: center;
-      align-content: center;
-      justify-items: center;
-      align-items: center;
-
-      .stepPass {
-        color: rgb(43, 148, 41);
-      }
-
-      .stepNow {
-        color: rgb(0, 60, 255);
-        font-size: 1.1rem;
-        font-weight: bold;
-      }
-    }
-  }
-
   .stepContainer {
     width: calc(var(--main-container-width) * 0.9);
     min-height: 200px;
-    margin-bottom: 120px;
+    margin-bottom: 30px;
+    padding: 20px;
     border: 2px rgba(150, 150, 150, 0.3) solid;
     border-radius: 1rem;
 
@@ -822,11 +562,9 @@ $width_CVC: v-bind(CVCWidth);
             padding: 5px 10px;
             /*background: rgba(210, 210, 210, 0.5);*/
             border-radius: 5px 0px 0px 5px;
-            background: linear-gradient(
-              45deg,
-              rgba(210, 210, 210, 0.3) 0% 50%,
-              transparent 80% 100%
-            );
+            background: linear-gradient(45deg,
+                rgba(210, 210, 210, 0.3) 0% 50%,
+                transparent 80% 100%);
           }
 
           .idImgIntro {
@@ -990,11 +728,9 @@ $width_CVC: v-bind(CVCWidth);
             border-radius: 20px 0px 0px 20px;
             display: grid;
             grid-template-columns: 30px 1fr;
-            background: linear-gradient(
-              45deg,
-              rgba(210, 210, 210, 0.2) 0% 50%,
-              transparent 70% 100%
-            );
+            background: linear-gradient(45deg,
+                rgba(210, 210, 210, 0.2) 0% 50%,
+                transparent 70% 100%);
             background-size: 0px 100%;
             background-repeat: no-repeat;
             cursor: pointer;
@@ -1036,11 +772,9 @@ $width_CVC: v-bind(CVCWidth);
           }
 
           .answerLine_picked {
-            background: linear-gradient(
-              45deg,
-              rgba(210, 150, 150, 0.2) 0% 50%,
-              transparent 70% 100%
-            );
+            background: linear-gradient(45deg,
+                rgba(210, 150, 150, 0.2) 0% 50%,
+                transparent 70% 100%);
             cursor: default !important;
           }
         }
@@ -1173,6 +907,7 @@ $width_CVC: v-bind(CVCWidth);
     background-repeat: no-repeat;
   }
 
+  /*
   .stepContainer:nth-child(odd) {
     padding: 20px 20px 20px 10%;
     margin-left: calc((100% - var(--main-container-width)) / 2);
@@ -1190,6 +925,40 @@ $width_CVC: v-bind(CVCWidth);
 
     .procdureStepHeaderText {
       margin: -40px 0px 0px -5px;
+    }
+  }
+  */
+
+  .stepActionContainer {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+
+    .stepBtnCase {
+      width: 30vw;
+      padding-bottom: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 30px;
+
+      .stepBtn {
+        padding: 10px;
+        text-align: center;
+        letter-spacing: 3px;
+        font-weight: bold;
+        background: linear-gradient(rgb(255, 255, 255) 0% 50%, rgb(215, 215, 215) 90% 100%);
+        border-radius: 99rem;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, .2);
+        cursor: pointer;
+      }
+
+      .stepBtn_disabled {
+        color: rgb(180, 180, 180);
+        background: rgb(210, 210, 210);
+        cursor: not-allowed;
+      }
+
+      .backwardBtn {}
     }
   }
 }
@@ -1287,16 +1056,27 @@ $width_CVC: v-bind(CVCWidth);
       grid-template-columns: 1fr !important;
     }
   }
+
+  .stepActionContainer {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+
+    .stepBtnCase {
+      width: 90vw;
+    }
+  }
 }
 </style>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import newebPay from '@/assets/ts/newebpayCryptor'
 import { sysConfig } from '@/stores/sysConfig'
 import swal from 'sweetalert2'
 import prodImg from '@/assets/images/Eason.jpg'
+import procdureBar from '@/components/PurchaseProcdure.vue'
 
 const config = sysConfig()
 
@@ -1311,33 +1091,8 @@ const nextChargeDate = ref({
   month: nextCharge.getMonth() < 10 ? '0' + (nextCharge.getMonth() + 1) : nextCharge.getMonth() + 1
 })
 const route = useRoute()
+const router = useRouter()
 const { pid } = route.params
-const procdureSteps = [
-  {
-    procdureIndex: 0,
-    procdureText: '確認商品'
-  },
-  {
-    procdureIndex: 4,
-    procdureText: '資本資料填寫'
-  },
-  {
-    procdureIndex: 5,
-    procdureText: '投資屬性調查'
-  },
-  {
-    procdureIndex: 6,
-    procdureText: '盡職調查'
-  },
-  {
-    procdureIndex: 7,
-    procdureText: '委任簽署'
-  },
-  {
-    procdureIndex: 8,
-    procdureText: '訂閱完成'
-  }
-]
 const investmentQuestions = ref([
   {
     question: '您是否為專業投資人',
@@ -1424,6 +1179,7 @@ const investmentQuestions = ref([
   }
 ])
 
+let procdureSteps = ref(0)
 let currentPurchaseStep = ref(0)
 let ppid = ref(pid)
 let productImage = ref('Eason.jpg')
@@ -1542,6 +1298,7 @@ newebPayCryptor.setPayerEmail('blair@hwa-guan.com.tw')
 newebPayCryptor.setReturnURL('https://www.hwa-guan.com.tw')
 newebPayCryptor.setBackURL('https://www.hwa-guan.com.tw')
 paymentInfo = newebPayCryptor.encrypt()
+const emit = defineEmits(['purchaseStepChange'])
 
 //console.log(paymentInfo)
 
@@ -1566,7 +1323,7 @@ const iAnswer2 = (question: number, answer: number) => {
   //console.log(answerSheet.value.investment[question][answer - 1])
   answerSheet.value.investment[question][answer - 1] =
     typeof answerSheet.value.investment[question][answer - 1] == 'undefined' ||
-    answerSheet.value.investment[question][answer - 1] == ''
+      answerSheet.value.investment[question][answer - 1] == ''
       ? answerText
       : ''
 }
@@ -1696,4 +1453,20 @@ const changeCardNo = (e: any) => {
 }
 
 changeSubType()
+
+const verifyContent = () => {
+  if (currentPurchaseStep.value < procdureSteps.value){ currentPurchaseStep.value++
+    emit('purchaseStepChange', currentPurchaseStep.value)
+  }
+}
+
+const backLastStep = () => {
+  if (currentPurchaseStep.value > 0) {currentPurchaseStep.value--
+    emit('purchaseStepChange', currentPurchaseStep.value)
+  }
+}
+
+const setProcdureSteps = (procSteps : number) => {
+  procdureSteps.value = procSteps
+}
 </script>

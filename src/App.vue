@@ -2,7 +2,7 @@
   <loading :status="showLoading"></loading>
   <div class="mainContainer" @scroll="scrolling" :class="{ hideScroll: dailogType != '' }">
     <div ref="appTop"></div>
-    <Dailog :showType="dailogType" :data="dailogData" @callDailog="showDailog" @loadingSwitch="loadingSwitch" />
+    <Dailog :showType="dailogType" :data="dailogData" @callDailog="showDailog" @loadingSwitch="loadingSwitch" @memberStatusChange="memberLogin" />
     <div class="topNav" v-if="!administration">
       <div class="mainNavContainer" :class="{ hideNav: scrollDown }">
         <div class="mainNav">
@@ -46,9 +46,15 @@
                 <div class="memberOptionsContainer" :class="{ showMemberOptions: showMemberOptions }">
                   <div class="memberOptionsCase">
                     <div class="memberOptionsLine">
-                      <div class="memberAreaBtn" @click="router.push('/member')">會員專區</div>
+                      <div class="memberAreaBtn myLearning" @click="router.push('/member')">我的學習</div>
                     </div>
                     <div class="memberOptionsLine">
+                      <div class="memberAreaBtn myProfile" @click="router.push('/member')">個人資料</div>
+                    </div>
+                    <div class="memberOptionsLine">
+                      <div class="memberAreaBtn myPurchase" @click="router.push('/member')">購買紀錄</div>
+                    </div>
+                    <div class="memberOptionsLine_final">
                       <div class="logoutBtn" @click="confirmLogout">登出</div>
                     </div>
                   </div>
@@ -68,8 +74,8 @@
                 <div class="optionItem" @click.stop="showDailog(null, 'service')">客服中心</div>
               </div>
             </div>
-            <div class="navOption" @click="tagID = 'trial'">內容試看</div>
-            <div class="navOption" @click="tagID = 'packages'" v-if="false">訂購方案</div>
+            <div class="navOption" @click="tagID = 'packages'" v-if="memberLogined">訂購方案</div>
+            <div class="navOption" @click="tagID = 'learning'" v-if="memberLogined">我的學習</div>
             <div class="navOption" @click="tagID = 'faq'">常見問題</div>
           </div>
           <div class="nav3rdLine">
@@ -107,9 +113,13 @@
             </div>
           </div>
         </div>
+        <div class="procdureBarContainer" :class="{ 'showProcdure': routerName == 'purchase' && scrollLoc > 620 }">
+          <procdureBar :stepChange="currentPurchaseStep"></procdureBar>
+        </div>
       </div>
     </div>
-    <RouterView @pickNav="shiftNavTag" @loadingSwitch="loadingSwitch" :goTag="tagID" />
+    <RouterView @pickNav="shiftNavTag" @loadingSwitch="loadingSwitch" @purchaseStepChange="changePurchaseStep"
+      :goTag="tagID" />
     <Footer @callDailog="showDailog" v-if="!administration"></Footer>
     <div class="goTop" :class="{ hideGoTop: scrollLoc < 100 }" @click="scrollToTop">
       <div>
@@ -133,11 +143,11 @@
   .topNav {
     width: 100%;
     height: 100px;
+    background-color: rgb(255, 255, 255);
 
     .mainNavContainer {
       top: 0px;
       width: 100%;
-      height: 100px;
       padding-left: calc((100% - var(--main-container-width)) / 2);
       background-color: var(--vt-c-white);
       box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
@@ -232,10 +242,10 @@
                 background-color: rgb(210, 210, 210);
                 display: grid;
                 grid-template-columns: 1fr;
-                row-gap: 1px;
 
-                .memberOptionsLine {
-                  padding: 15px 0px;
+                .memberOptionsLine,
+                .memberOptionsLine_final {
+                  padding: 5px 0px;
                   background-color: rgb(255, 255, 255);
 
                   .memberAreaBtn,
@@ -269,6 +279,42 @@
                       rgba(10, 100, 255, 0.1);
                   }
 
+                  .myLearning {
+                    background:
+                      url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(0, 0, 0, .1)" class="bi bi-mortarboard-fill" viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z"/></svg>') no-repeat 10px 5px,
+                      linear-gradient(to right,
+                        rgba(255, 255, 255, 0.5) 0px 100px,
+                        transparent 150px 100%),
+                      rgba(210, 210, 210, 0.5);
+                  }
+
+                  .myLearning:hover {
+                    background:
+                      url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(10, 100, 255, .5)" class="bi bi-mortarboard-fill" viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z"/></svg>') no-repeat 10px 5px,
+                      linear-gradient(to right,
+                        rgba(10, 100, 255, 0.1) 0px 100px,
+                        transparent 150px 100%),
+                      rgba(10, 100, 255, 0.1);
+                  }
+
+                  .myPurchase {
+                    background:
+                      url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(0, 0, 0, .1)" class="bi bi-coin" viewBox="0 0 16 16"><path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"/><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"/></svg>') no-repeat 10px 5px,
+                      linear-gradient(to right,
+                        rgba(255, 255, 255, 0.5) 0px 100px,
+                        transparent 150px 100%),
+                      rgba(210, 210, 210, 0.5);
+                  }
+
+                  .myPurchase:hover {
+                    background:
+                      url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(10, 100, 255, .5)" class="bi bi-coin" viewBox="0 0 16 16"><path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"/><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"/></svg>') no-repeat 10px 5px,
+                      linear-gradient(to right,
+                        rgba(10, 100, 255, 0.1) 0px 100px,
+                        transparent 150px 100%),
+                      rgba(10, 100, 255, 0.1);
+                  }
+
                   .logoutBtn {
                     background:
                       url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="rgba(0, 0, 0, .1)" class="bi bi-person-fill-x" viewBox="0 0 16 16"><path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/><path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708Z"/></svg>') no-repeat 10px 5px,
@@ -287,6 +333,11 @@
                       rgba(255, 0, 0, 0.1);
                   }
                 }
+
+                .memberOptionsLine_final {
+                  padding: 10px 0px;
+                  border-top: 1px rgb(210, 210, 210) solid;
+                }
               }
             }
 
@@ -302,7 +353,7 @@
 
         .nav2ndLine {
           display: grid;
-          grid-template-columns: auto repeat(3, 120px);
+          grid-template-columns: auto repeat(4, 120px);
 
           .navOption {
             padding-bottom: 5px;
@@ -374,6 +425,17 @@
         }
       }
     }
+
+      .procdureBarContainer {
+        width : var(--main-container-width);
+        padding-top : 30px;
+        border-top : 1px rgba(210, 210, 210, .5) dashed;
+        display: none;
+      }
+
+      .showProcdure {
+        display: flex !important;
+      }
   }
 
   .hideNav {
@@ -385,6 +447,7 @@
     max-height: 100vh !important;
     opacity: 1 !important;
   }
+
 }
 
 @media screen and (max-width: 768px) {
@@ -480,8 +543,14 @@ import swal from 'sweetalert2'
 import Dailog from '@/components/SysDailog.vue'
 import Footer from '@/components/FooterView.vue'
 import loading from '@/components/LoadingCover.vue'
+import procdureBar from '@/components/PurchaseProcdure.vue'
+
 const router = useRouter()
-//console.log(router.currentRoute._value.name)
+let routerName = ref("")
+watch(() => router.currentRoute.value.name?.toString(), (after, before) => {
+  console.log(after)
+  routerName.value = "" + after
+})
 let dailogType = ref('')
 let dailogData = ref([{}])
 let mobileDailogOn = ref(false)
@@ -521,9 +590,12 @@ let memberInfo = ref({
     ? JSON.parse('' + sessionStorage.getItem('memberOrder'))
     : [{}]
 })
+let memberLogined = ref(sessionStorage.getItem('memberName') != null && ('' + sessionStorage.getItem('memberName')).length > 0)
+
 const appTop = ref<any>()
 const bottom = ref(false)
 const administration = ref(location.href.toLowerCase().indexOf('/admin') > -1)
+let currentPurchaseStep = ref(0)
 
 const shiftNavTag = (navID: string) => {
   console.log(navID)
@@ -608,6 +680,7 @@ const confirmLogout = () => {
       if (result.isConfirmed) {
         sessionStorage.clear()
         location.href = '/'
+        memberLogined.value = false
       }
     })
 }
@@ -617,10 +690,20 @@ const loadingSwitch = (status: boolean) => {
   showLoading.value = status
 }
 
+const changePurchaseStep = (purchaseStep: number) => {
+  currentPurchaseStep.value = purchaseStep
+}
+
+const memberLogin = (ligined : boolean) => {
+  memberLogined.value = ligined
+}
+
 watch(
   () => sessionStorage.getItem('memberName'),
-  (before, after) => {
-    memberInfo.value.name = sessionStorage.getItem('memberName')
+  (after, before) => {
+    memberInfo.value.name = after
+    memberLogined.value = after != null && ("" + after).length > 0
+    console.log(memberLogined.value)
   }
 )
 </script>

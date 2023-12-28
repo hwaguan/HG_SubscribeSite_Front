@@ -29,6 +29,11 @@ const router = createRouter({
       component: () => import('../views/PurchaseView.vue')
     },
     {
+      path: '/purchaseRecords',
+      name: 'purchaseRecords',
+      component: () => import('../views/PurchaseRecordsView.vue')
+    },
+    {
       path: '/newebpay/:result',
       name: 'newebpay',
       component: () => import('../views/NewbepayView.vue')

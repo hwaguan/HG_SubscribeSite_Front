@@ -379,7 +379,7 @@ const greeting =
         : '日安'
 
 //定義數值上抛器
-const emit = defineEmits(['callBack', 'loadingSwitch', 'closeDailog'])
+const emit = defineEmits(['callBack', 'loadingSwitch', 'closeDailog', 'memberStatusChange'])
 
 let loginInfo = ref({
   account: '',
@@ -491,7 +491,7 @@ const verifyInfo = () => {
   //return allPass.value
 }
 
-const proceedLogin = () => {
+const proceedLogin = async () => {
   if (
     loginInfo.value.account != '' ||
     loginInfo.value.password != '' ||
@@ -507,48 +507,111 @@ const proceedLogin = () => {
         confirmButtonText: '碓定'
       })
     } else {
-      memberInfo.value.id = '1'
-      memberInfo.value.name = '蔡詩媛'
-      memberInfo.value.gender = '0'
-      memberInfo.value.email = 'tester01@google.com'
-      memberInfo.value.tel = '0221234567'
-      memberInfo.value.mobile = '0912345678'
+      loadingSwitch(true)
+      const loginResult = await launcher.userLogin(loginInfo.value.account, loginInfo.value.password)
+      loadingSwitch(false)
 
-      memberInfo.value.address = '地球某一處無人知的小角落'
-      memberInfo.value.cart = [{}]
-      memberInfo.value.order = [{}]
+      if (loginResult.result) {
+        console.log(loginResult)
+        const userInfo = loginResult.message
+        memberInfo.value.id = '1'
+        memberInfo.value.name = '蔡詩媛'
+        memberInfo.value.gender = '0'
+        memberInfo.value.email = 'tester01@google.com'
+        memberInfo.value.tel = '0221234567'
+        memberInfo.value.mobile = '0912345678'
 
-      sessionStorage.setItem('memberID', memberInfo.value.id)
-      sessionStorage.setItem('memberName', memberInfo.value.name)
-      sessionStorage.setItem('memberGender', memberInfo.value.gender)
-      sessionStorage.setItem('memberEmail', memberInfo.value.email)
-      sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
-      sessionStorage.setItem('memberTel', memberInfo.value.tel)
-      sessionStorage.setItem('memberAddress', memberInfo.value.address)
-      sessionStorage.setItem('memberCart', JSON.stringify(memberInfo.value.cart))
-      sessionStorage.setItem('memberOrder', JSON.stringify(memberInfo.value.order))
+        memberInfo.value.address = '地球某一處無人知的小角落'
+        memberInfo.value.cart = [{}]
+        memberInfo.value.order = [{}]
 
-      const GenderText = memberInfo.value.gender == '0' ? '小姐' : '先生'
+        sessionStorage.setItem('memberID', memberInfo.value.id)
+        sessionStorage.setItem('memberName', memberInfo.value.name)
+        sessionStorage.setItem('memberGender', memberInfo.value.gender)
+        sessionStorage.setItem('memberEmail', memberInfo.value.email)
+        sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
+        sessionStorage.setItem('memberTel', memberInfo.value.tel)
+        sessionStorage.setItem('memberAddress', memberInfo.value.address)
+        sessionStorage.setItem('memberCart', JSON.stringify(memberInfo.value.cart))
+        sessionStorage.setItem('memberOrder', JSON.stringify(memberInfo.value.order))
 
-      emit('callBack', null, '')
+        const GenderText = memberInfo.value.gender == '0' ? '小姐' : '先生'
 
-      alarm.miniMessage(
-        1,
-        greeting + '! ' + memberInfo.value.name + ' ' + GenderText + ' 您好!',
-        2000
-      )
+        emit('callBack', null, '')
+
+        /*
+        alarm.miniMessage(
+          1,
+          greeting + '! ' + memberInfo.value.name + ' ' + GenderText + ' 您好!',
+          2000
+        )
+        */
+
+        swal.fire({
+          icon: 'success',
+          title: "登入成功",
+          text: userInfo.mName + " 您好",
+          //showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          //cancelButtonColor: '#d33',
+          confirmButtonText: '碓定',
+          //cancelButtonText: '放棄'
+        })
+          .then((result) => {
+            if (result.isConfirmed) {
+              memberInfo.value.id = "" + userInfo.mID
+              memberInfo.value.name = "" + userInfo.mName
+              memberInfo.value.gender = "" + userInfo.mGender == null ? "未設定" : userInfo.mGender == 0 ? "女" : "男"
+              memberInfo.value.email = "" + userInfo.mMail
+              memberInfo.value.tel = "" + userInfo.mTelHome
+              memberInfo.value.mobile = "" + userInfo.mMobile
+              memberInfo.value.zip = "" + userInfo.mZip
+              memberInfo.value.city = "" + userInfo.mAddressCity
+              memberInfo.value.area = "" + userInfo.mAddressArea
+              memberInfo.value.address = "" + userInfo.mAddressRest
+              memberInfo.value.order = [{}]
+
+              sessionStorage.setItem('memberID', memberInfo.value.id)
+              sessionStorage.setItem('memberName', memberInfo.value.name)
+              sessionStorage.setItem('memberGender', memberInfo.value.gender)
+              sessionStorage.setItem('memberEmail', memberInfo.value.email)
+              sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
+              sessionStorage.setItem('memberTel', memberInfo.value.tel)
+              sessionStorage.setItem('memberAddrZip', memberInfo.value.zip)
+              sessionStorage.setItem('memberAddrCity', memberInfo.value.city)
+              sessionStorage.setItem('memberAddrArea', memberInfo.value.area)
+              sessionStorage.setItem('memberAddrRest', memberInfo.value.address)
+
+              emit('memberStatusChange', true)
+              emit('closeDailog')
+            }
+          })
+      } else {
+        swal.fire({
+          icon: 'error',
+          title: "登入失敗",
+          text: "請您再次確認您的登入資訊是否正確",
+          //showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          //cancelButtonColor: '#d33',
+          confirmButtonText: '碓定',
+          //cancelButtonText: '放棄'
+        })
+          .then((result) => {
+          })
+      }
     }
   }
 }
 
 const googleLogin = async () => {
 
-  loadingSwitch(true)
   const googleAccount = await TPL.googleLogin()
 
   console.log("google response user ===> ")
   console.log(googleAccount)
 
+  loadingSwitch(true)
   const loginResult = await launcher.googleLogin(googleAccount.sub, googleAccount.name, googleAccount.email, googleAccount.picture)
   loadingSwitch(false)
 
@@ -568,31 +631,45 @@ const googleLogin = async () => {
     })
       .then((result) => {
         if (result.isConfirmed) {
-            memberInfo.value.id = "" + userInfo.mID
-            memberInfo.value.name = "" + userInfo.mGoogleName
-            memberInfo.value.gender = "" + userInfo.mGender == null ? "未設定" : userInfo.mGender == 0 ? "女" : "男"
-            memberInfo.value.email = "" + userInfo.mMail
-            memberInfo.value.tel = "" + userInfo.mTelHome
-            memberInfo.value.mobile = "" + userInfo.mMobile
-            memberInfo.value.zip = "" + userInfo.mZip
-            memberInfo.value.city = "" + userInfo.mAddressCity
-            memberInfo.value.area = "" + userInfo.mAddressArea
-            memberInfo.value.address = "" + userInfo.mAddressRest
-            memberInfo.value.order = [{}]
+          memberInfo.value.id = "" + userInfo.mID
+          memberInfo.value.name = "" + userInfo.mGoogleName
+          memberInfo.value.gender = "" + userInfo.mGender == null ? "未設定" : userInfo.mGender == 0 ? "女" : "男"
+          memberInfo.value.email = "" + userInfo.mMail
+          memberInfo.value.tel = "" + userInfo.mTelHome
+          memberInfo.value.mobile = "" + userInfo.mMobile
+          memberInfo.value.zip = "" + userInfo.mZip
+          memberInfo.value.city = "" + userInfo.mAddressCity
+          memberInfo.value.area = "" + userInfo.mAddressArea
+          memberInfo.value.address = "" + userInfo.mAddressRest
+          memberInfo.value.order = [{}]
 
-            sessionStorage.setItem('memberID', memberInfo.value.id)
-            sessionStorage.setItem('memberName', memberInfo.value.name)
-            sessionStorage.setItem('memberGender', memberInfo.value.gender)
-            sessionStorage.setItem('memberEmail', memberInfo.value.email)
-            sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
-            sessionStorage.setItem('memberTel', memberInfo.value.tel)
-            sessionStorage.setItem('memberAddrZip', memberInfo.value.zip)
-            sessionStorage.setItem('memberAddrCity', memberInfo.value.city)
-            sessionStorage.setItem('memberAddrArea', memberInfo.value.area)
-            sessionStorage.setItem('memberAddrRest', memberInfo.value.address)
+          sessionStorage.setItem('memberID', memberInfo.value.id)
+          sessionStorage.setItem('memberName', memberInfo.value.name)
+          sessionStorage.setItem('memberGender', memberInfo.value.gender)
+          sessionStorage.setItem('memberEmail', memberInfo.value.email)
+          sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
+          sessionStorage.setItem('memberTel', memberInfo.value.tel)
+          sessionStorage.setItem('memberAddrZip', memberInfo.value.zip)
+          sessionStorage.setItem('memberAddrCity', memberInfo.value.city)
+          sessionStorage.setItem('memberAddrArea', memberInfo.value.area)
+          sessionStorage.setItem('memberAddrRest', memberInfo.value.address)
 
-            emit('closeDailog')
+          emit('memberStatusChange', true)
+          emit('closeDailog')
         }
+      })
+  } else {
+    swal.fire({
+      icon: 'error',
+      title: "登入失敗",
+      text: "請您再次確認您的登入資訊是否正確",
+      //showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      //cancelButtonColor: '#d33',
+      confirmButtonText: '碓定',
+      //cancelButtonText: '放棄'
+    })
+      .then((result) => {
       })
   }
 }
