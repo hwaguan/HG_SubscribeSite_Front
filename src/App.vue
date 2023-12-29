@@ -272,7 +272,7 @@ $avatar : v-bind(avatarStr);
             .memberOptionsContainer {
               width: 0px;
               max-height: 0px;
-              right: 180px;
+              right: calc((100vw - var(--main-container-width)) / 2);
               padding: 0px 15px;
               background-color: rgb(255, 255, 255);
               border-left: 1px rgb(240, 240, 240) solid;
