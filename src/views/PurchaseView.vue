@@ -1070,7 +1070,7 @@ $width_CVC: v-bind(CVCWidth);
 </style>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import newebPay from '@/assets/ts/newebpayCryptor'
 import { sysConfig } from '@/stores/sysConfig'
@@ -1300,6 +1300,16 @@ newebPayCryptor.setBackURL('https://www.hwa-guan.com.tw')
 paymentInfo = newebPayCryptor.encrypt()
 const emit = defineEmits(['purchaseStepChange', 'syncProcdure'])
 
+const props = defineProps({
+  pStep: {
+    type : Number,
+    required : true
+  }
+})
+
+watch(() => props.pStep, (after, before) => {
+  currentPurchaseStep.value = props.pStep
+})
 //console.log(paymentInfo)
 
 //console.log(newebPayCryptor.decrypt(paymentInfo))

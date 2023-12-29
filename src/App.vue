@@ -122,12 +122,12 @@
           </div>
         </div>
         <div class="procdureBarContainer" :class="{ 'showProcdure': routerName == 'purchase' && scrollLoc > 620 }">
-          <procdureBar :stepChange="currentPurchaseStep"></procdureBar>
+          <procdureBar :stepChange="currentPurchaseStep" @syncProcdure="changePurchaseStep"></procdureBar>
         </div>
       </div>
     </div>
     <RouterView @pickNav="shiftNavTag" @loadingSwitch="loadingSwitch" @purchaseStepChange="changePurchaseStep" @syncProcdure="changePurchaseStep"
-      :goTag="tagID" />
+      :goTag="tagID" :pStep="currentPurchaseStep" />
     <Footer @callDailog="showDailog" v-if="!administration"></Footer>
     <div class="goTop" :class="{ hideGoTop: scrollLoc < 100 }" @click="scrollToTop">
       <div>
