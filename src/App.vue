@@ -154,6 +154,7 @@ $avatar : v-bind(avatarStr);
     width: 100%;
     height: 100px;
     background-color: rgb(255, 255, 255);
+    letter-spacing: .15rem;
 
     .mainNavContainer {
       top: 0px;
@@ -255,11 +256,11 @@ $avatar : v-bind(avatarStr);
                 }
 
                 .memberAvatarMale {
-                  background-color: rgb(150, 199, 255)
+                  background-color: radial-gradient(farthest-corner at 15px 15px,rgb(190, 220, 255), rgb(130, 190, 255))
                 }
 
                 .memberAvatarFemale {
-                  background-color: rgb(255, 150, 150)
+                  background: radial-gradient(farthest-corner at 15px 15px,rgb(255, 230, 230), rgb(255, 150, 150))
                 }
               }
 
