@@ -526,10 +526,10 @@ const proceedLogin = async () => {
               memberInfo.value.avatar = "" + userInfo.mAvatar
               memberInfo.value.tel = "" + userInfo.mTelHome
               memberInfo.value.mobile = "" + userInfo.mMobile
-              memberInfo.value.zip = "" + userInfo.mZip
-              memberInfo.value.city = "" + userInfo.mAddressCity
-              memberInfo.value.area = "" + userInfo.mAddressArea
-              memberInfo.value.address = "" + userInfo.mAddressRest
+              memberInfo.value.addressZip = "" + userInfo.mZip
+              memberInfo.value.addressCity = "" + userInfo.mAddressCity
+              memberInfo.value.addressArea = "" + userInfo.mAddressArea
+              memberInfo.value.addressOther = "" + userInfo.mAddressRest
 
               config.setMemberInfo(memberInfo.value)
 
@@ -586,12 +586,10 @@ const googleLogin = async () => {
           memberInfo.value.email = "" + userInfo.mMail
           memberInfo.value.tel = "" + userInfo.mTelHome
           memberInfo.value.mobile = "" + userInfo.mMobile
-          memberInfo.value.zip = "" + userInfo.mZip
-          memberInfo.value.city = "" + userInfo.mAddressCity
-          memberInfo.value.area = "" + userInfo.mAddressArea
-          memberInfo.value.address = "" + userInfo.mAddressRest
-          memberInfo.value.cart = []
-          memberInfo.value.order = []
+          memberInfo.value.addressZip = "" + userInfo.mZip
+          memberInfo.value.addressCity = "" + userInfo.mAddressCity
+          memberInfo.value.addressArea = "" + userInfo.mAddressArea
+          memberInfo.value.addressOther = "" + userInfo.mAddressRest
 
           sessionStorage.setItem('memberID', memberInfo.value.id)
           sessionStorage.setItem('memberName', memberInfo.value.name)
@@ -600,10 +598,10 @@ const googleLogin = async () => {
           sessionStorage.setItem('memberAvatar', memberInfo.value.avatar)
           sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
           sessionStorage.setItem('memberTel', memberInfo.value.tel)
-          sessionStorage.setItem('memberAddrZip', memberInfo.value.zip)
-          sessionStorage.setItem('memberAddrCity', memberInfo.value.city)
-          sessionStorage.setItem('memberAddrArea', memberInfo.value.area)
-          sessionStorage.setItem('memberAddrRest', memberInfo.value.address)
+          sessionStorage.setItem('memberAddrZip', memberInfo.value.addressZip)
+          sessionStorage.setItem('memberAddrCity', memberInfo.value.addressCity)
+          sessionStorage.setItem('memberAddrArea', memberInfo.value.addressArea)
+          sessionStorage.setItem('memberAddress', memberInfo.value.addressOther)
 
           emit('memberStatusChange', memberInfo)
           emit('closeDailog')

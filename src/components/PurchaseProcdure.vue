@@ -201,7 +201,7 @@ watch(() => props.stepChange, (after, before) => {
 
 emit('totalSteps', procdureSteps.length)
 
-const procdureShift = (tid) => {
+const procdureShift = (tid:number) => {
   if(tid <= completeProcdure.value){
     currentPurchaseStep.value = tid
     emit('syncProcdure', tid)

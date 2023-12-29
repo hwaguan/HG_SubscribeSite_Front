@@ -25,8 +25,7 @@
               <div></div>
               <div class="btnCase">
                 <span class="position-absolute translate-middle badge rounded-pill bg-danger" style="margin-left: 40px"
-                  v-if="memberInfo.cart && memberInfo.cart.length > 0">
-                  {{ memberInfo.cart.length }}
+                  v-if="false/*memberInfo.cart && memberInfo.cart.length > 0*/">
                   <span class="visually-hidden">unread messages</span>
                 </span>
                 <div class="shoppingCart" @click="cartAction">
@@ -48,7 +47,7 @@
                     v-if="memberLogined">
                     <div class="memberAvatar" v-if="memberInfo.avatar != 'null'"></div>
                     <div class="memberAvatarName" v-if="memberInfo.avatar == 'null'"
-                      v-html="memberInfo.name != 'null' && memberInfo.name.length >= 3 ? memberInfo.name.substring(memberInfo.name.length - 2) : memberInfo.name">
+                      v-html="memberInfo.name != 'null' && ('' + memberInfo.name).length >= 3 ? ('' + memberInfo.name).substring(('' + memberInfo.name).length - 2) : ('' + memberInfo.name)">
                     </div>
                   </div>
                 </div>
@@ -614,35 +613,7 @@ let showMemberOptions = ref(false)
 let nextPage = ref('')
 let tagID = ref('')
 let showLoading = ref(false)
-let memberInfo = ref({
-  id: sessionStorage.getItem('memberID') ? sessionStorage.getItem('memberID') : ('' as String),
-  number: sessionStorage.getItem('memberNo') ? sessionStorage.getItem('memberNo') : ('' as String),
-  name: sessionStorage.getItem('memberName')
-    ? sessionStorage.getItem('memberName')
-    : ('' as String),
-  gender: sessionStorage.getItem('memberGender')
-    ? sessionStorage.getItem('memberGender')
-    : ('' as String),
-  email: sessionStorage.getItem('memberEmail')
-    ? sessionStorage.getItem('memberEmail')
-    : ('' as String),
-  avatar: sessionStorage.getItem('memberAvatar')
-    ? sessionStorage.getItem('memberAvatar')
-    : ('' as String),
-  mobile: sessionStorage.getItem('memberMobile')
-    ? sessionStorage.getItem('memberMobile')
-    : ('' as String),
-  tel: sessionStorage.getItem('memberTel') ? sessionStorage.getItem('memberTel') : ('' as String),
-  address: sessionStorage.getItem('memberAddress')
-    ? sessionStorage.getItem('memberAddress')
-    : ('' as String),
-  cart: sessionStorage.getItem('memberCart')
-    ? JSON.parse('' + sessionStorage.getItem('memberCart'))
-    : [],
-  order: sessionStorage.getItem('memberOrder')
-    ? JSON.parse('' + sessionStorage.getItem('memberOrder'))
-    : []
-})
+let memberInfo = ref(config.getMember())
 let memberLogined = ref(sessionStorage.getItem('memberName') != null && ('' + sessionStorage.getItem('memberName')).length > 0)
 let avatarStr = ref("url(" + memberInfo.value.avatar + ")")
 
@@ -693,15 +664,7 @@ const memberAction = () => {
     sessionStorage.getItem('memberName') != null &&
     ('' + sessionStorage.getItem('memberName')).length > 0
   ) {
-    memberInfo.value.id = sessionStorage.getItem('memberID')
-    memberInfo.value.number = sessionStorage.getItem('memberNo')
-    memberInfo.value.name = sessionStorage.getItem('memberName')
-    memberInfo.value.gender = sessionStorage.getItem('memberGender')
-    memberInfo.value.email = sessionStorage.getItem('memberEmail')
-    memberInfo.value.avatar = sessionStorage.getItem('memberAvatar')
-    memberInfo.value.tel = sessionStorage.getItem('memberMobile')
-    memberInfo.value.mobile = sessionStorage.getItem('memberTel')
-    memberInfo.value.address = sessionStorage.getItem('memberAddress')
+    memberInfo.value = config.getMember()
 
     showMemberOptions.value = !showMemberOptions.value
   } else {
