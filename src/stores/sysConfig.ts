@@ -29,6 +29,67 @@ export const sysConfig = defineStore({
     memberLoginPath: 'Member/login',
     googleLoginPath: 'Member/googleLogin',
     tokenPath: 'Secret/getTransferToken',
+    getMember: () => {
+      return {
+        id : sessionStorage.getItem('memberID'),
+        name : sessionStorage.getItem('memberName'),
+        gender : sessionStorage.getItem('memberGender'),
+        avatar : sessionStorage.getItem('memberAvatar'),
+        email : sessionStorage.getItem('memberEmail'),
+        tel : sessionStorage.getItem('memberMobile'),
+        mobile : sessionStorage.getItem('memberTel'),
+        addressZip : sessionStorage.getItem('memberZIP'),
+        addressCity : sessionStorage.getItem('memberCity'),
+        addressArea : sessionStorage.getItem('memberArea'),
+        addressOther : sessionStorage.getItem('memberAddress')
+      }
+    },
+    setMemberID: (id : string) => {
+      sessionStorage.setItem('memberID', id)
+    },
+    setMemberName: (name : string) => {
+      sessionStorage.setItem('memberName', name)
+    },
+    setMemberGender: (gender : string) => {
+      sessionStorage.setItem('memberGender', gender == "" ? "未設定" : gender == "0" ? "女" : "男")
+    },
+    setMemberEmail: (email : string) => {
+      sessionStorage.setItem('memberEmail', email)
+    },
+    setMemberAvatar: (avatar : string) => {
+      sessionStorage.setItem('memberAvatar', avatar)
+    },
+    setMemberTel: (tel : string) => {
+      sessionStorage.setItem('memberTel', tel)
+    },
+    setMemberMobile: (mobile : string) => {
+      sessionStorage.setItem('memberMobile', mobile)
+    },
+    setMemberZip: (zip : string) => {
+      sessionStorage.setItem('memberZIP', "" + zip)
+    },
+    setMemberCity: (city : string) => {
+      sessionStorage.setItem('memberCity', "" + city)
+    },
+    setMemberArea: (area : string) => {
+      sessionStorage.setItem('memberArea', "" + area)
+    },
+    setMemberAddress: (address : string) => {
+      sessionStorage.setItem('memberAddress', "" + address)
+    },
+    setMemberInfo: (memberObj : any) => {
+      sessionStorage.setItem('memberID', memberObj.id)
+      sessionStorage.setItem('memberName', memberObj.name)
+      sessionStorage.setItem('memberGender', memberObj.gender)
+      sessionStorage.setItem('memberAvatar', memberObj.avatar)
+      sessionStorage.setItem('memberEmail', memberObj.email)
+      sessionStorage.setItem('memberTel', memberObj.tel)
+      sessionStorage.setItem('memberMobile', memberObj.mobile)
+      sessionStorage.setItem('memberZIP', memberObj.addressZip)
+      sessionStorage.setItem('memberCity', memberObj.addressCity)
+      sessionStorage.setItem('memberArea', memberObj.addressArea)
+      sessionStorage.setItem('memberAddress', memberObj.addressOther)
+    },
     zipCodeMapping: [
       {
         name: '臺北市',

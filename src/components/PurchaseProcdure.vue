@@ -2,8 +2,8 @@
   <div class="procdureBar">
     <div class="procdureStepContainer">
       <div class="procdureStepText" v-for="(step, index) in procdureSteps" :key="index" :class="{
-        stepPass: step.procdureIndex < currentPurchaseStep,
-        stepNow: step.procdureIndex == currentPurchaseStep
+        stepPass: step.procdureIndex < completeProcdure,
+        stepNow: step.procdureIndex == completeProcdure
       }">
         {{ step.procdureText }}
       </div>
@@ -11,15 +11,16 @@
     <div class="procdureLineContainer">
       <div class="procdureStep" v-for="(step, index) in procdureSteps" :key="index">
         <div class="procdureLine" :class="{
-          linePass: step.procdureIndex <= currentPurchaseStep,
-          lineNext: step.procdureIndex > currentPurchaseStep
+          linePass: step.procdureIndex <= completeProcdure,
+          lineNext: step.procdureIndex > completeProcdure
         }" v-if="index > 0"></div>
         <div class="procdureDot">
           <div class="procdureDot" :class="{
             dotNow: step.procdureIndex == currentPurchaseStep,
-            dotNext: step.procdureIndex > currentPurchaseStep,
-            dotPass: step.procdureIndex <= currentPurchaseStep
-          }"></div>
+            dotAct: step.procdureIndex == completeProcdure,
+            dotNext: step.procdureIndex >= completeProcdure,
+            dotPass: step.procdureIndex <= completeProcdure
+          }" @click="procdureShift(index)"></div>
         </div>
       </div>
     </div>
@@ -64,11 +65,19 @@ $stepLineLength: v-bind(procdureLineCount);
         background: rgba(255, 82, 82, 1);
       }
 
+      .dotAct{
+        height: 15px;
+        width: 15px;
+        border-radius: 99em;
+        background : linear-gradient(90deg, rgba(255, 82, 82, 1), rgba(210, 210, 210, 1)) !important;
+      }
+
       .dotPass {
         background: url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(255, 255, 255)" class="bi bi-check" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>'),
           rgb(43, 148, 41);
         background-repeat: no-repeat;
         background-position: center;
+        cursor : pointer;
       }
 
       .dotNext,
@@ -77,7 +86,7 @@ $stepLineLength: v-bind(procdureLineCount);
       }
 
       .dotNow {
-        background: rgba(255, 82, 82, 1);
+        //background: rgba(255, 82, 82, 1);
         box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
         transform: scale(1);
         animation: pulse-red 2s infinite;
@@ -136,6 +145,7 @@ $stepLineLength: v-bind(procdureLineCount);
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import sysAlarm from '@/assets/ts/sysAlarm'
 
 const procdureSteps = [
   {
@@ -170,6 +180,8 @@ const procdureSteps = [
 
 const procdureTextCount = ref("" + procdureSteps.length)
 const procdureLineCount = ref("" + (procdureSteps.length - 1))
+const alarm = new sysAlarm()
+let completeProcdure = ref(0)
 
 const props = defineProps({
   stepChange: {
@@ -178,13 +190,23 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['totalSteps'])
+const emit = defineEmits(['totalSteps', 'shiftProcdure', 'syncProcdure'])
 
 let currentPurchaseStep = ref(0)
 
 watch(() => props.stepChange, (after, before) => {
   currentPurchaseStep.value = after
+  if(currentPurchaseStep.value > completeProcdure.value)completeProcdure.value = currentPurchaseStep.value
 })
 
 emit('totalSteps', procdureSteps.length)
+
+const procdureShift = (tid) => {
+  if(tid <= completeProcdure.value){
+    currentPurchaseStep.value = tid
+    emit('syncProcdure', tid)
+  }else{
+    alarm.miniMessage("error", "步驟尚未完成")
+  }
+}
 </script>

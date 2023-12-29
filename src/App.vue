@@ -2,7 +2,8 @@
   <loading :status="showLoading"></loading>
   <div class="mainContainer" @scroll="scrolling" :class="{ hideScroll: dailogType != '' }">
     <div ref="appTop"></div>
-    <Dailog :showType="dailogType" :data="dailogData" @callDailog="showDailog" @loadingSwitch="loadingSwitch" @memberStatusChange="memberLogin" />
+    <Dailog :showType="dailogType" :data="dailogData" @callDailog="showDailog" @loadingSwitch="loadingSwitch"
+      @memberStatusChange="memberLogin" />
     <div class="topNav" v-if="!administration">
       <div class="mainNavContainer" :class="{ hideNav: scrollDown }">
         <div class="mainNav">
@@ -39,10 +40,17 @@
               <div class="btnCase">
                 <div class="memberIcon" @click="memberAction" :title="memberInfo.name?.toString()">
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-                    class="bi bi-person-fill" viewBox="0 0 16 16" v-if="memberInfo.avatar == ''">
+                    class="bi bi-person-fill" viewBox="0 0 16 16" v-if="!memberLogined">
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                   </svg>
-                  <div class="memberAvatar"></div>
+                  <div class="memberAvatarFrame"
+                    :class="{ 'memberAvatarMale': memberInfo.gender != null && memberInfo.gender == '男', 'memberAvatarFemale': memberInfo.gender != null && memberInfo.gender == '女' }"
+                    v-if="memberLogined">
+                    <div class="memberAvatar" v-if="memberInfo.avatar != 'null'"></div>
+                    <div class="memberAvatarName" v-if="memberInfo.avatar == 'null'"
+                      v-html="memberInfo.name != 'null' && memberInfo.name.length >= 3 ? memberInfo.name.substring(memberInfo.name.length - 2) : memberInfo.name">
+                    </div>
+                  </div>
                 </div>
                 <div class="memberOptionsContainer" :class="{ showMemberOptions: showMemberOptions }">
                   <div class="memberOptionsCase">
@@ -119,7 +127,7 @@
         </div>
       </div>
     </div>
-    <RouterView @pickNav="shiftNavTag" @loadingSwitch="loadingSwitch" @purchaseStepChange="changePurchaseStep"
+    <RouterView @pickNav="shiftNavTag" @loadingSwitch="loadingSwitch" @purchaseStepChange="changePurchaseStep" @syncProcdure="changePurchaseStep"
       :goTag="tagID" />
     <Footer @callDailog="showDailog" v-if="!administration"></Footer>
     <div class="goTop" :class="{ hideGoTop: scrollLoc < 100 }" @click="scrollToTop">
@@ -137,6 +145,7 @@
 
 <style scoped lang="scss">
 $avatar : v-bind(avatarStr);
+
 .mainContainer {
   width: 100%;
   height: 100vh;
@@ -215,6 +224,44 @@ $avatar : v-bind(avatarStr);
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
+
+                .memberAvatarFrame {
+                  width: 100%;
+                  height: 100%;
+                  border-radius: 999rem;
+
+                  .memberAvatar {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 999rem;
+                    background-size: cover;
+                    background-image: $avatar;
+                  }
+
+                  .memberAvatarName {
+                    width: 100%;
+                    height: 100%;
+                    font-size: .8rem;
+                    color: rgb(255, 255, 255);
+                    font-weight: bold;
+                    border-radius: 999rem;
+                    background-size: cover;
+                    background-image: $avatar;
+                    display: flex;
+                    align-content: center;
+                    align-items: center;
+                    justify-content: space-around;
+                    justify-items: space-around;
+                  }
+                }
+
+                .memberAvatarMale {
+                  background-color: rgb(150, 199, 255)
+                }
+
+                .memberAvatarFemale {
+                  background-color: rgb(255, 150, 150)
+                }
               }
 
               .shoppingCart {
@@ -428,16 +475,16 @@ $avatar : v-bind(avatarStr);
       }
     }
 
-      .procdureBarContainer {
-        width : var(--main-container-width);
-        padding-top : 30px;
-        border-top : 1px rgba(210, 210, 210, .5) dashed;
-        display: none;
-      }
+    .procdureBarContainer {
+      width: var(--main-container-width);
+      padding-top: 30px;
+      border-top: 1px rgba(210, 210, 210, .5) dashed;
+      display: none;
+    }
 
-      .showProcdure {
-        display: flex !important;
-      }
+    .showProcdure {
+      display: flex !important;
+    }
   }
 
   .hideNav {
@@ -541,6 +588,7 @@ $avatar : v-bind(avatarStr);
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { sysConfig } from '@/stores/sysConfig'
 import swal from 'sweetalert2'
 import Dailog from '@/components/SysDailog.vue'
 import Footer from '@/components/FooterView.vue'
@@ -548,9 +596,9 @@ import loading from '@/components/LoadingCover.vue'
 import procdureBar from '@/components/PurchaseProcdure.vue'
 
 const router = useRouter()
+const config = sysConfig()
 let routerName = ref("")
 watch(() => router.currentRoute.value.name?.toString(), (after, before) => {
-  console.log(after)
   routerName.value = "" + after
 })
 let dailogType = ref('')
@@ -596,7 +644,7 @@ let memberInfo = ref({
     : []
 })
 let memberLogined = ref(sessionStorage.getItem('memberName') != null && ('' + sessionStorage.getItem('memberName')).length > 0)
-let avatarStr = ref("")
+let avatarStr = ref("url(" + memberInfo.value.avatar + ")")
 
 const appTop = ref<any>()
 const bottom = ref(false)
@@ -604,7 +652,6 @@ const administration = ref(location.href.toLowerCase().indexOf('/admin') > -1)
 let currentPurchaseStep = ref(0)
 
 const shiftNavTag = (navID: string) => {
-  console.log(navID)
 }
 
 const scrolling = (e: any) => {
@@ -651,6 +698,7 @@ const memberAction = () => {
     memberInfo.value.name = sessionStorage.getItem('memberName')
     memberInfo.value.gender = sessionStorage.getItem('memberGender')
     memberInfo.value.email = sessionStorage.getItem('memberEmail')
+    memberInfo.value.avatar = sessionStorage.getItem('memberAvatar')
     memberInfo.value.tel = sessionStorage.getItem('memberMobile')
     memberInfo.value.mobile = sessionStorage.getItem('memberTel')
     memberInfo.value.address = sessionStorage.getItem('memberAddress')
@@ -700,9 +748,10 @@ const changePurchaseStep = (purchaseStep: number) => {
   currentPurchaseStep.value = purchaseStep
 }
 
-const memberLogin = (memberData : any) => {
-  memberInfo.value = memberData
-  console.log(memberData)
+const memberLogin = (memberData: any) => {
+  memberInfo.value = config.getMember()
+  
+  avatarStr.value = memberInfo.value.avatar != "null" ? "url(" + memberInfo.value.avatar + ")" : ""
   memberLogined.value = memberInfo.value.id != ""
 }
 

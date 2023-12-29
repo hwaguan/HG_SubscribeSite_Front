@@ -364,7 +364,9 @@ import swal from 'sweetalert2'
 import sysAlarm from '@/assets/ts/sysAlarm'
 import thirdPartyLauncher from '@/assets/ts/ThirdPartyLauncher'
 import memberLauncher from '@/assets/ts/MemberLauncher'
+import { sysConfig } from '@/stores/sysConfig'
 
+const config = sysConfig()
 const alarm = new sysAlarm()
 const now = new Date()
 const TPL = new thirdPartyLauncher()
@@ -406,21 +408,7 @@ let hidePass = ref(true)
 let hideConfirmPass = ref(true)
 let isLogin = ref(true)
 let allPass = ref(false)
-let memberInfo = ref({
-  id: sessionStorage.getItem('memberID'),
-  name: sessionStorage.getItem('memberName'),
-  gender: sessionStorage.getItem('memberGender'),
-  email: sessionStorage.getItem('memberEmail'),
-  avatar: sessionStorage.getItem('memberAvatar'),
-  mobile: sessionStorage.getItem('memberMobile'),
-  tel: sessionStorage.getItem('memberTel'),
-  zip: sessionStorage.getItem('memberAddrZip'),
-  city: sessionStorage.getItem('memberAddrCity'),
-  area: sessionStorage.getItem('memberAddrArea'),
-  address: sessionStorage.getItem('memberAddrOther'),
-  cart: JSON.parse('' + sessionStorage.getItem('memberCart')),
-  order: JSON.parse('' + sessionStorage.getItem('memberOrder'))
-})
+let memberInfo = ref(config.getMember())
 let props = defineProps({
   reset: Number
 })
@@ -513,40 +501,11 @@ const proceedLogin = async () => {
       loadingSwitch(false)
 
       if (loginResult.result) {
-        console.log(loginResult)
         const userInfo = loginResult.message
-        memberInfo.value.id = '1'
-        memberInfo.value.name = '蔡詩媛'
-        memberInfo.value.gender = '0'
-        memberInfo.value.email = 'tester01@google.com'
-        memberInfo.value.tel = '0221234567'
-        memberInfo.value.mobile = '0912345678'
-
-        memberInfo.value.address = '地球某一處無人知的小角落'
-        memberInfo.value.cart = []
-        memberInfo.value.order = []
-
-        sessionStorage.setItem('memberID', memberInfo.value.id)
-        sessionStorage.setItem('memberName', memberInfo.value.name)
-        sessionStorage.setItem('memberGender', memberInfo.value.gender)
-        sessionStorage.setItem('memberEmail', memberInfo.value.email)
-        sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
-        sessionStorage.setItem('memberTel', memberInfo.value.tel)
-        sessionStorage.setItem('memberAddress', memberInfo.value.address)
-        sessionStorage.setItem('memberCart', JSON.stringify(memberInfo.value.cart))
-        sessionStorage.setItem('memberOrder', JSON.stringify(memberInfo.value.order))
 
         const GenderText = memberInfo.value.gender == '0' ? '小姐' : '先生'
 
         emit('callBack', null, '')
-
-        /*
-        alarm.miniMessage(
-          1,
-          greeting + '! ' + memberInfo.value.name + ' ' + GenderText + ' 您好!',
-          2000
-        )
-        */
 
         swal.fire({
           icon: 'success',
@@ -571,20 +530,8 @@ const proceedLogin = async () => {
               memberInfo.value.city = "" + userInfo.mAddressCity
               memberInfo.value.area = "" + userInfo.mAddressArea
               memberInfo.value.address = "" + userInfo.mAddressRest
-              memberInfo.value.cart = []
-              memberInfo.value.order = []
 
-              sessionStorage.setItem('memberID', memberInfo.value.id)
-              sessionStorage.setItem('memberName', memberInfo.value.name)
-              sessionStorage.setItem('memberGender', memberInfo.value.gender)
-              sessionStorage.setItem('memberEmail', memberInfo.value.email)
-              sessionStorage.setItem('memberAvatar', memberInfo.value.avatar)
-              sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
-              sessionStorage.setItem('memberTel', memberInfo.value.tel)
-              sessionStorage.setItem('memberAddrZip', memberInfo.value.zip)
-              sessionStorage.setItem('memberAddrCity', memberInfo.value.city)
-              sessionStorage.setItem('memberAddrArea', memberInfo.value.area)
-              sessionStorage.setItem('memberAddrRest', memberInfo.value.address)
+              config.setMemberInfo(memberInfo.value)
 
               emit('memberStatusChange', memberInfo)
               emit('closeDailog')
@@ -611,9 +558,6 @@ const proceedLogin = async () => {
 const googleLogin = async () => {
 
   const googleAccount = await TPL.googleLogin()
-
-  console.log("google response user ===> ")
-  console.log(googleAccount)
 
   loadingSwitch(true)
   const loginResult = await launcher.googleLogin(googleAccount.sub, googleAccount.name, googleAccount.email, googleAccount.picture)
@@ -646,8 +590,8 @@ const googleLogin = async () => {
           memberInfo.value.city = "" + userInfo.mAddressCity
           memberInfo.value.area = "" + userInfo.mAddressArea
           memberInfo.value.address = "" + userInfo.mAddressRest
-          memberInfo.value.cart = [{}]
-          memberInfo.value.order = [{}]
+          memberInfo.value.cart = []
+          memberInfo.value.order = []
 
           sessionStorage.setItem('memberID', memberInfo.value.id)
           sessionStorage.setItem('memberName', memberInfo.value.name)

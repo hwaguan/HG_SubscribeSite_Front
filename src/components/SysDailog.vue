@@ -140,7 +140,6 @@ let props = defineProps({
 const emit = defineEmits(['callDailog', 'loadingSwitch', 'memberStatusChange'])
 
 const closeDailog = () => {
-  console.log("closeDailog")
   if (dailogType.value === 'contact') {
     if (
       contactData.value.name != '' ||

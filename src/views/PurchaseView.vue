@@ -29,7 +29,7 @@
         <div>依據【投信投顧法規第八十三條】投顧需簽訂證券投資顧問契約，載明雙方權利義務。</div>
       </div>
     </div>
-    <procdureBar :stepChange="currentPurchaseStep" @totalSteps="setProcdureSteps"></procdureBar>
+    <procdureBar :stepChange="currentPurchaseStep" @totalSteps="setProcdureSteps" @syncProcdure="syncProcdure"></procdureBar>
     <div class="stepContainer personalData" v-if="currentPurchaseStep == 0">
       <div class="procdureStepHeaderText">
         商品確認<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -1298,7 +1298,7 @@ newebPayCryptor.setPayerEmail('blair@hwa-guan.com.tw')
 newebPayCryptor.setReturnURL('https://www.hwa-guan.com.tw')
 newebPayCryptor.setBackURL('https://www.hwa-guan.com.tw')
 paymentInfo = newebPayCryptor.encrypt()
-const emit = defineEmits(['purchaseStepChange'])
+const emit = defineEmits(['purchaseStepChange', 'syncProcdure'])
 
 //console.log(paymentInfo)
 
@@ -1468,5 +1468,10 @@ const backLastStep = () => {
 
 const setProcdureSteps = (procSteps : number) => {
   procdureSteps.value = procSteps
+}
+
+const syncProcdure = (pid : number) => {
+  currentPurchaseStep.value = pid
+  emit('syncProcdure', pid)
 }
 </script>
