@@ -24,8 +24,8 @@
               <div></div>
               <div class="btnCase">
                 <span class="position-absolute translate-middle badge rounded-pill bg-danger" style="margin-left: 40px"
-                  v-if="memberInfo.cart.lang > 0">
-                  {{ memberInfo.cart.lang }}
+                  v-if="memberInfo.cart && memberInfo.cart.length > 0">
+                  {{ memberInfo.cart.length }}
                   <span class="visually-hidden">unread messages</span>
                 </span>
                 <div class="shoppingCart" @click="cartAction">
@@ -39,9 +39,10 @@
               <div class="btnCase">
                 <div class="memberIcon" @click="memberAction" :title="memberInfo.name?.toString()">
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-                    class="bi bi-person-fill" viewBox="0 0 16 16">
+                    class="bi bi-person-fill" viewBox="0 0 16 16" v-if="memberInfo.avatar == ''">
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                   </svg>
+                  <div class="memberAvatar"></div>
                 </div>
                 <div class="memberOptionsContainer" :class="{ showMemberOptions: showMemberOptions }">
                   <div class="memberOptionsCase">
@@ -135,6 +136,7 @@
 </template>
 
 <style scoped lang="scss">
+$avatar : v-bind(avatarStr);
 .mainContainer {
   width: 100%;
   height: 100vh;
@@ -576,6 +578,9 @@ let memberInfo = ref({
   email: sessionStorage.getItem('memberEmail')
     ? sessionStorage.getItem('memberEmail')
     : ('' as String),
+  avatar: sessionStorage.getItem('memberAvatar')
+    ? sessionStorage.getItem('memberAvatar')
+    : ('' as String),
   mobile: sessionStorage.getItem('memberMobile')
     ? sessionStorage.getItem('memberMobile')
     : ('' as String),
@@ -585,12 +590,13 @@ let memberInfo = ref({
     : ('' as String),
   cart: sessionStorage.getItem('memberCart')
     ? JSON.parse('' + sessionStorage.getItem('memberCart'))
-    : [{}],
+    : [],
   order: sessionStorage.getItem('memberOrder')
     ? JSON.parse('' + sessionStorage.getItem('memberOrder'))
-    : [{}]
+    : []
 })
 let memberLogined = ref(sessionStorage.getItem('memberName') != null && ('' + sessionStorage.getItem('memberName')).length > 0)
+let avatarStr = ref("")
 
 const appTop = ref<any>()
 const bottom = ref(false)
@@ -694,8 +700,10 @@ const changePurchaseStep = (purchaseStep: number) => {
   currentPurchaseStep.value = purchaseStep
 }
 
-const memberLogin = (ligined : boolean) => {
-  memberLogined.value = ligined
+const memberLogin = (memberData : any) => {
+  memberInfo.value = memberData
+  console.log(memberData)
+  memberLogined.value = memberInfo.value.id != ""
 }
 
 watch(

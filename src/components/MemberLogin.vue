@@ -411,6 +411,7 @@ let memberInfo = ref({
   name: sessionStorage.getItem('memberName'),
   gender: sessionStorage.getItem('memberGender'),
   email: sessionStorage.getItem('memberEmail'),
+  avatar: sessionStorage.getItem('memberAvatar'),
   mobile: sessionStorage.getItem('memberMobile'),
   tel: sessionStorage.getItem('memberTel'),
   zip: sessionStorage.getItem('memberAddrZip'),
@@ -522,8 +523,8 @@ const proceedLogin = async () => {
         memberInfo.value.mobile = '0912345678'
 
         memberInfo.value.address = '地球某一處無人知的小角落'
-        memberInfo.value.cart = [{}]
-        memberInfo.value.order = [{}]
+        memberInfo.value.cart = []
+        memberInfo.value.order = []
 
         sessionStorage.setItem('memberID', memberInfo.value.id)
         sessionStorage.setItem('memberName', memberInfo.value.name)
@@ -563,18 +564,21 @@ const proceedLogin = async () => {
               memberInfo.value.name = "" + userInfo.mName
               memberInfo.value.gender = "" + userInfo.mGender == null ? "未設定" : userInfo.mGender == 0 ? "女" : "男"
               memberInfo.value.email = "" + userInfo.mMail
+              memberInfo.value.avatar = "" + userInfo.mAvatar
               memberInfo.value.tel = "" + userInfo.mTelHome
               memberInfo.value.mobile = "" + userInfo.mMobile
               memberInfo.value.zip = "" + userInfo.mZip
               memberInfo.value.city = "" + userInfo.mAddressCity
               memberInfo.value.area = "" + userInfo.mAddressArea
               memberInfo.value.address = "" + userInfo.mAddressRest
-              memberInfo.value.order = [{}]
+              memberInfo.value.cart = []
+              memberInfo.value.order = []
 
               sessionStorage.setItem('memberID', memberInfo.value.id)
               sessionStorage.setItem('memberName', memberInfo.value.name)
               sessionStorage.setItem('memberGender', memberInfo.value.gender)
               sessionStorage.setItem('memberEmail', memberInfo.value.email)
+              sessionStorage.setItem('memberAvatar', memberInfo.value.avatar)
               sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
               sessionStorage.setItem('memberTel', memberInfo.value.tel)
               sessionStorage.setItem('memberAddrZip', memberInfo.value.zip)
@@ -582,7 +586,7 @@ const proceedLogin = async () => {
               sessionStorage.setItem('memberAddrArea', memberInfo.value.area)
               sessionStorage.setItem('memberAddrRest', memberInfo.value.address)
 
-              emit('memberStatusChange', true)
+              emit('memberStatusChange', memberInfo)
               emit('closeDailog')
             }
           })
@@ -634,6 +638,7 @@ const googleLogin = async () => {
           memberInfo.value.id = "" + userInfo.mID
           memberInfo.value.name = "" + userInfo.mGoogleName
           memberInfo.value.gender = "" + userInfo.mGender == null ? "未設定" : userInfo.mGender == 0 ? "女" : "男"
+          memberInfo.value.avatar = "" + userInfo.mGoogleIcon
           memberInfo.value.email = "" + userInfo.mMail
           memberInfo.value.tel = "" + userInfo.mTelHome
           memberInfo.value.mobile = "" + userInfo.mMobile
@@ -641,12 +646,14 @@ const googleLogin = async () => {
           memberInfo.value.city = "" + userInfo.mAddressCity
           memberInfo.value.area = "" + userInfo.mAddressArea
           memberInfo.value.address = "" + userInfo.mAddressRest
+          memberInfo.value.cart = [{}]
           memberInfo.value.order = [{}]
 
           sessionStorage.setItem('memberID', memberInfo.value.id)
           sessionStorage.setItem('memberName', memberInfo.value.name)
           sessionStorage.setItem('memberGender', memberInfo.value.gender)
           sessionStorage.setItem('memberEmail', memberInfo.value.email)
+          sessionStorage.setItem('memberAvatar', memberInfo.value.avatar)
           sessionStorage.setItem('memberMobile', memberInfo.value.mobile)
           sessionStorage.setItem('memberTel', memberInfo.value.tel)
           sessionStorage.setItem('memberAddrZip', memberInfo.value.zip)
@@ -654,7 +661,7 @@ const googleLogin = async () => {
           sessionStorage.setItem('memberAddrArea', memberInfo.value.area)
           sessionStorage.setItem('memberAddrRest', memberInfo.value.address)
 
-          emit('memberStatusChange', true)
+          emit('memberStatusChange', memberInfo)
           emit('closeDailog')
         }
       })

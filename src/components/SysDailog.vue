@@ -192,8 +192,8 @@ const loadingSwitch = (status: boolean) => {
     emit('loadingSwitch', status)
 }
 
-const memberLogin = (logined : boolean) => {
-  emit('memberStatusChange', logined)
+const memberLogin = (memberInfo : any) => {
+  emit('memberStatusChange', memberInfo)
 }
 
 watch(
