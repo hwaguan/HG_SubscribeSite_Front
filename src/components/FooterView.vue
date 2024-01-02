@@ -96,13 +96,15 @@ let targetDailog = ref('')
 const showDailog = (rid: Number) => {
   switch (rid) {
     case 1:
-      targetDailog.value = 'rules'
+      //targetDailog.value = 'rules'
+      window.open('../termsOfService', 'TermsOfService')
       break
     case 2:
       targetDailog.value = 'authoirty'
       break
     case 3:
-      targetDailog.value = 'privacy'
+      //targetDailog.value = 'privacy'      
+      window.open('../privacyPolicy', 'PrivacyPolicy')
       break
     case 4:
       targetDailog.value = 'cooperate'

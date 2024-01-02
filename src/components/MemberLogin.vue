@@ -365,12 +365,14 @@ import sysAlarm from '@/assets/ts/sysAlarm'
 import thirdPartyLauncher from '@/assets/ts/ThirdPartyLauncher'
 import memberLauncher from '@/assets/ts/MemberLauncher'
 import { sysConfig } from '@/stores/sysConfig'
+import { useRoute, useRouter } from 'vue-router'
 
 const config = sysConfig()
 const alarm = new sysAlarm()
 const now = new Date()
 const TPL = new thirdPartyLauncher()
 const launcher = new memberLauncher()
+const router = useRouter()
 const greeting =
   now.getHours() < 11
     ? '早安'
