@@ -1,6 +1,6 @@
 <template>
   <loading :status="showLoading"></loading>
-  <div class="AdminLoginContainer">
+  <div class="AdminLoginContainer" @keyup="procedeLogin">
     <div class="LoginPanelContainer">
       <div class="panenTitle">
         <h2>華冠投顧</h2>
@@ -203,5 +203,9 @@ const verifyLogin = async () => {
       emit('redirectPage', null, 'main')
     }
   }
+}
+
+const procedeLogin = (e : any) => {
+  if(e.keyCode == 13 && loginInfo.value.userName != '' && loginInfo.value.password != '')verifyLogin()
 }
 </script>

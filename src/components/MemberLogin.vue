@@ -1,5 +1,5 @@
 <template>
-  <div class="loginContainer">
+  <div class="loginContainer" @keydown="submitLogin">
     <div class="loginHeader">
       <div v-if="!forgetPassword">
         <h4>會員<span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span></h4>
@@ -868,6 +868,11 @@ const calcelApply = () => {
   ftMailError.value = ""
   forgetPassword.value = false
   emit('closeDailog')
+}
+
+const submitLogin = (e : any) => {
+  verifyInfo()
+  if(e.keyCode == 13 && isLogin.value && allPass.value)proceedLogin()
 }
 
 const loadingSwitch = (status: boolean) => {
