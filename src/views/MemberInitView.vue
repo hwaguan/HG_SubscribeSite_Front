@@ -61,10 +61,10 @@ const initMember = async () => {
         sessionStorage.setItem('memberAddress', memberInfo.value.addressOther)
 
         emit('memberStatusChange', memberInfo)
-        
+
         swal.fire({
             icon: 'success',
-            title: "帳號初始化成功",
+            title: "會員帳號啟用成功",
             text: "請您記得至會員專區修改您的個人資訊哦!",
             //showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -79,7 +79,7 @@ const initMember = async () => {
         if (initResult.code < 0) {
             swal.fire({
                 icon: 'error',
-                title: "帳號初始化失敗",
+                title: "會員帳號啟用失敗",
                 text: "帳號不存在",
                 //showCancelButton: true,
                 confirmButtonColor: '#3085d6',
