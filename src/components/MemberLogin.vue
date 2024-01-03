@@ -527,6 +527,10 @@ watch(
     loginError.value.cpass.error = false
 
     allPass.value = false
+    fpMail.value = ""
+    fpMailPass.value = false
+    ftMailError.value = ""
+    forgetPassword.value = false
   }
 )
 
