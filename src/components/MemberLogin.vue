@@ -862,6 +862,7 @@ const calcelApply = () => {
   fpMail.value = ""
   fpMailPass.value = false
   ftMailError.value = ""
+  forgetPassword.value = false
   emit('closeDailog')
 }
 
