@@ -127,7 +127,7 @@
       </div>
     </div>
     <RouterView @pickNav="shiftNavTag" @loadingSwitch="loadingSwitch" @purchaseStepChange="changePurchaseStep" @syncProcdure="changePurchaseStep"
-      :goTag="tagID" :pStep="currentPurchaseStep" />
+    @memberStatusChange="memberLogin" :goTag="tagID" :pStep="currentPurchaseStep" />
     <Footer @callDailog="showDailog" v-if="!administration"></Footer>
     <div class="goTop" :class="{ hideGoTop: scrollLoc < 100 }" @click="scrollToTop">
       <div>

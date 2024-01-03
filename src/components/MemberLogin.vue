@@ -80,7 +80,7 @@
         </div>
       </div>
       <div class="submitBtnCase">
-        <div class="submitButton" :class="{ btnDisabled: !allPass }" @click="proceedLogin">
+        <div class="submitButton" :class="{ btnDisabled: !allPass }" @click="loginOrRegister">
           <span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span>
         </div>
       </div>
@@ -366,12 +366,14 @@ import thirdPartyLauncher from '@/assets/ts/ThirdPartyLauncher'
 import memberLauncher from '@/assets/ts/MemberLauncher'
 import { sysConfig } from '@/stores/sysConfig'
 import { useRoute, useRouter } from 'vue-router'
+import apiProcdure from '@/assets/ts/APIProcdure'
 
 const config = sysConfig()
 const alarm = new sysAlarm()
 const now = new Date()
 const TPL = new thirdPartyLauncher()
 const launcher = new memberLauncher()
+const api = new apiProcdure()
 const router = useRouter()
 const greeting =
   now.getHours() < 11
@@ -480,6 +482,56 @@ const verifyInfo = () => {
 
   //console.log(allPass.value)
   //return allPass.value
+}
+
+const loginOrRegister = () => {
+  console.log("loginOrRegister => " + (isLogin.value ? "login" : "register"))
+
+  if (isLogin.value) {
+    proceedLogin()
+  } else {
+    proceedRegister()
+  }
+}
+
+const proceedRegister = async () => {
+  console.log("register");
+  const verifyPath = config.hostPath + config.memberExistenceCheckPath
+
+  loadingSwitch(true)
+  const checkResult: any = await api.callAPI(verifyPath, { mMail: loginInfo.value.account })
+  loadingSwitch(false)
+
+  if (checkResult.message) {
+    swal.fire({
+      icon: 'warning',
+      title: '您所輸入的資訊發生錯誤!',
+      text: '您所輸入的 eMail 已經存在',
+      showCancelButton: false,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: '碓定'
+    })
+  } else {
+
+    loadingSwitch(true)
+    const registerPath = config.hostPath + config.memberRegisterPath
+    const registerResult: any = await api.callAPI(registerPath, { account: loginInfo.value.account, password: loginInfo.value.password })
+    loadingSwitch(false)
+
+    let finalSubject = "註冊" + (registerResult.result ? "成功" : "失敗")
+    let finalMessage = registerResult.result ? "請至您剛才輸入的信箱收臤確認郵件，完成您的註冊" : "系統發生問題，請秋候再試"
+
+    swal.fire({
+      icon: registerResult.result ? 'success' : 'warning',
+      title: finalSubject,
+      text: finalMessage,
+      showCancelButton: false,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: '碓定'
+    }).then((result) => {
+      emit('closeDailog')
+    })
+  }
 }
 
 const proceedLogin = async () => {
