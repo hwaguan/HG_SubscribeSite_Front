@@ -1,21 +1,26 @@
 <template>
   <div class="loginContainer">
     <div class="loginHeader">
-      <h4>會員<span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span></h4>
+      <div v-if="!forgetPassword">
+        <h4>會員<span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span></h4>
+      </div>
+      <div class="forgetPassTitle" v-if="forgetPassword">
+        <h4>忘記密碼</h4>
+      </div>
     </div>
-    <div class="inputZone">
+    <div class="inputZone" v-if="!forgetPassword">
       <div class="thirdPartyLogin">
         <div class="loginLine">
           <div class="loginBtn googlelogin" @click="googleLogin">
             使用 Google 帳號<span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span>
           </div>
         </div>
-        <div class="loginLine">
+        <div class="loginLine" v-if="false">
           <div class="loginBtn facebooklogin">
             使用 Facebook 帳號<span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span>
           </div>
         </div>
-        <div class="loginLine">
+        <div class="loginLine" v-if="false">
           <div class="loginBtn linelogin">
             使用 Line 帳號<span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span>
           </div>
@@ -76,13 +81,26 @@
           </div>
         </div>
         <div v-if="isLogin">
-          <div class="forgetPass">忘記密碼</div>
+          <div class="forgetPass" @click="forgetPassword = !forgetPassword">忘記密碼</div>
         </div>
       </div>
       <div class="submitBtnCase">
         <div class="submitButton" :class="{ btnDisabled: !allPass }" @click="loginOrRegister">
           <span v-if="isLogin">登入</span><span v-if="!isLogin">註冊</span>
         </div>
+      </div>
+    </div>
+    <div class="forgetPassContainer" v-if="forgetPassword">
+      <div class="forgetPassWording">請輸入您註冊會員時所填寫的 e-mail<br>進行重置密碼</div>
+      <div class="forgetPassPS">註：一個月內僅能進行三次密碼重置申請，請謹慎操作。</div>
+      <div class="forgetPassInput">
+        <input type="text" v-model="fpMail" @blur="verifyMail" @focus="ftMailError = ''" />
+        <div class="forgetPassError" v-if="ftMailError != ''" v-html="ftMailError"></div>
+      </div>
+      <div class="forgetPassBtnCase">
+        <div class="forgetPassAbortBtn">放棄重置</div>
+        <div class="forgetPassSubmitBtn" :class="{ 'forgetPassSubmitBtn_disabled': !fpMailPass }"
+          @click="applyResetPassword">送出申請</div>
       </div>
     </div>
   </div>
@@ -326,6 +344,82 @@
       cursor: pointer;
     }
   }
+
+  .forgetPassContainer {
+    padding: 20px;
+    letter-spacing: .2rem;
+    color: rgb(50, 50, 50);
+
+    .forgetPassWording {
+      padding-bottom: 10px;
+      font-size: 1rem;
+      text-align: center !important;
+    }
+
+    .forgetPassPS {
+      padding-bottom: 30px;
+      letter-spacing: .1rem;
+      font-size: .8rem;
+      text-align: center;
+      color: rgb(165, 0, 0);
+    }
+
+    .forgetPassInput {
+      padding-bottom: 30px;
+      display: grid;
+      grid-template-columns: 1fr;
+
+      .forgetPassError {
+        padding: 0px 10px;
+        color: rgb(255, 0, 0);
+        font-size: .8rem;
+        text-align: right;
+      }
+    }
+
+    .forgetPassBtnCase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 30px;
+      justify-content: center;
+      justify-items: center;
+
+      .forgetPassAbortBtn,
+      .forgetPassSubmitBtn {
+        width: 80%;
+        padding: 10px 20px;
+        color: rgb(255, 255, 255);
+        text-align: justify;
+        text-align-last: justify;
+        border-radius: 5px;
+        background-color: rgba(210, 210, 210);
+        cursor: pointer;
+      }
+
+      .forgetPassAbortBtn {
+        background-color: rgb(165, 0, 0);
+      }
+
+      .forgetPassAbortBtn:hover {
+        background-color: rgb(100, 0, 0);
+      }
+
+      .forgetPassSubmitBtn {
+        background-color: rgb(0, 165, 0);
+      }
+
+      .forgetPassSubmitBtn:hover {
+        background-color: rgb(0, 100, 0);
+      }
+
+      .forgetPassSubmitBtn_disabled,
+      .forgetPassSubmitBtn_disabled:hover {
+        color: rgb(155, 155, 155);
+        background-color: rgba(210, 210, 210);
+        cursor: not-allowed;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -408,11 +502,15 @@ let loginError = ref({
   }
 })
 
+let forgetPassword = ref(false)
 let hidePass = ref(true)
 let hideConfirmPass = ref(true)
 let isLogin = ref(true)
 let allPass = ref(false)
 let memberInfo = ref(config.getMember())
+let fpMail = ref("")
+let fpMailPass = ref(false)
+let ftMailError = ref("")
 let props = defineProps({
   reset: Number
 })
@@ -675,6 +773,96 @@ const googleLogin = async () => {
       .then((result) => {
       })
   }
+}
+
+const verifyMail = () => {
+  let regex = new RegExp(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)
+
+  fpMailPass.value = regex.test(fpMail.value)
+  ftMailError.value = fpMailPass.value ? '' : 'Email格式不正確'
+}
+
+const applyResetPassword = async () => {
+  if (fpMailPass.value) {
+
+    const verifyPath = config.hostPath + config.memberExistenceCheckPath
+
+    loadingSwitch(true)
+    const checkResult: any = await api.callAPI(verifyPath, { mMail: fpMail.value })
+    loadingSwitch(false)
+
+    if (!checkResult.message) {
+      swal.fire({
+        icon: 'error',
+        title: "重置失敗",
+        text: "您所輸入的 e-mail 不是有效會員帳號",
+        //showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        //cancelButtonColor: '#d33',
+        confirmButtonText: '碓定',
+        //cancelButtonText: '放棄'
+      }).then((result) => {
+        calcelApply()
+      })
+    } else {
+      const applayPath = config.hostPath + config.memberApplyResetPasswordPath
+
+      loadingSwitch(true)
+      const applyResult: any = await api.callAPI(applayPath, { mMail: fpMail.value })
+      loadingSwitch(false)
+      console.log(applyResult)
+
+      if (applyResult.result) {
+        if (applyResult.message) {
+          swal.fire({
+            icon: 'success',
+            title: "重置密碼請求已送出",
+            text: "請您至剛才所輸入的 e-mail 信箱中收取重置連結，進行密碼重置",
+            //showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            //cancelButtonColor: '#d33',
+            confirmButtonText: '碓定',
+            //cancelButtonText: '放棄'
+          }).then((result) => {
+            calcelApply()
+          })
+        } else {
+          swal.fire({
+            icon: 'warning',
+            title: "重置密碼請求失敗",
+            text: "申請重置密碼次數已超出限制",
+            //showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            //cancelButtonColor: '#d33',
+            confirmButtonText: '碓定',
+            //cancelButtonText: '放棄'
+          }).then((result) => {
+            calcelApply()
+          })
+        }
+      } else {
+        swal.fire({
+          icon: 'error',
+          title: "重置密碼請求失敗",
+          text: "系統暫時無法處理您的請求，請稍候再試...",
+          //showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          //cancelButtonColor: '#d33',
+          confirmButtonText: '碓定',
+          //cancelButtonText: '放棄'
+        }).then((result) => {
+          calcelApply()
+        })
+      }
+    }
+  }
+}
+
+const calcelApply = () => {
+  fpMail.value = ""
+  fpMailPass.value = false
+  ftMailError.value = ""
+  emit('closeDailog')
 }
 
 const loadingSwitch = (status: boolean) => {

@@ -30,6 +30,8 @@ export const sysConfig = defineStore({
     memberRegisterPath : 'Member/registerMember',
     memberInitPath : 'Member/initMember',
     memberLoginPath: 'Member/login',
+    memberApplyResetPasswordPath: 'Member/applyResetPassword',
+    memberResetPasswordPath: 'Member/resetMemberPassword',
     googleLoginPath: 'Member/googleLogin',
     tokenPath: 'Secret/getTransferToken',
     getMember: () => {
