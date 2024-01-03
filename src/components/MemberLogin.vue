@@ -98,7 +98,7 @@
         <div class="forgetPassError" v-if="ftMailError != ''" v-html="ftMailError"></div>
       </div>
       <div class="forgetPassBtnCase">
-        <div class="forgetPassAbortBtn">放棄重置</div>
+        <div class="forgetPassAbortBtn" @click="forgetPassword = false">放棄重置</div>
         <div class="forgetPassSubmitBtn" :class="{ 'forgetPassSubmitBtn_disabled': !fpMailPass }"
           @click="applyResetPassword">送出申請</div>
       </div>
