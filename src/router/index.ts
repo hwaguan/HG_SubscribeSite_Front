@@ -57,6 +57,16 @@ const router = createRouter({
       path: '/privacyPolicy',
       name: 'PP',
       component: () => import('../views/PrivacyPolicyView.vue')
+    },
+    {
+      path: '/resetPassword/:rkey',
+      name: 'resetPassword',
+      component: () => import('../views/ResetPasswrodView.vue')
+    },
+    {
+      path: '/testMail',
+      name: 'testMail',
+      component: () => import('../views/TestSendMailView.vue')
     }
   ]
 })

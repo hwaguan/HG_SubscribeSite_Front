@@ -6,8 +6,11 @@ const HostLoc = 1 //0 local, 1 production
 export const sysConfig = defineStore({
   id: 'sysConfig',
   state: () => ({
+    MailServerPath: 'https://mail.surenotifyapi.com/v1/messages',
+    sendMailKey: 'NDAyODgxM2I4NmMyMjdkNzAxODZjNDU1ZjIyNjA2NzktMTY4MDA2MDkyNS0x',
     GoogleClientID: "164923720779-ngbah69trn13rlu25non5cc6dojaftdb.apps.googleusercontent.com",
     hostPath: HostLoc < 1 ? LocalAPIPath : ProductionAPIPath,
+    sitePath: 'http://192.168.1.26:8014/',
     loginPath: 'login',
     adminLoginPath: 'Admin/login',
     adminMenuPath: 'Admin/getAdminMenu',
@@ -31,6 +34,7 @@ export const sysConfig = defineStore({
     memberInitPath : 'Member/initMember',
     memberLoginPath: 'Member/login',
     memberApplyResetPasswordPath: 'Member/applyResetPassword',
+    memberVerifyResetKeyPath: 'Member/verifyResetKey',
     memberResetPasswordPath: 'Member/resetMemberPassword',
     googleLoginPath: 'Member/googleLogin',
     tokenPath: 'Secret/getTransferToken',

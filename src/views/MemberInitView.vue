@@ -7,7 +7,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import newebPay from '@/assets/ts/newebpayCryptor'
 import { sysConfig } from '@/stores/sysConfig'
 import apiProcdure from '@/assets/ts/APIProcdure'
 import swal from 'sweetalert2'

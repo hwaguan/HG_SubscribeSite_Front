@@ -126,8 +126,9 @@
         </div>
       </div>
     </div>
+    <div class="mainContentFrame">
     <RouterView @pickNav="shiftNavTag" @loadingSwitch="loadingSwitch" @purchaseStepChange="changePurchaseStep" @syncProcdure="changePurchaseStep"
-    @memberStatusChange="memberLogin" :goTag="tagID" :pStep="currentPurchaseStep" />
+    @memberStatusChange="memberLogin" :goTag="tagID" :pStep="currentPurchaseStep" /></div>
     <Footer @callDailog="showDailog" v-if="!administration"></Footer>
     <div class="goTop" :class="{ hideGoTop: scrollLoc < 100 }" @click="scrollToTop">
       <div>
@@ -497,6 +498,9 @@ $avatar : v-bind(avatarStr);
     opacity: 1 !important;
   }
 
+  .mainContentFrame{
+    min-height: calc(100vh - 410px);
+  }
 }
 
 @media screen and (max-width: 768px) {
