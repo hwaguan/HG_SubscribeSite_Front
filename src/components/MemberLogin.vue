@@ -633,8 +633,8 @@ const proceedRegister = async () => {
     receiver.name = "貴會員"
     receiver.address = loginInfo.value.account
 
-    MS.addReceiver(receiver)
-    MS.send()
+    //MS.addReceiver(receiver)
+    //MS.send()
 
     loadingSwitch(false)
 

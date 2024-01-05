@@ -29,6 +29,8 @@ export const sysConfig = defineStore({
     adminGroupRevivePath: 'Admin/reviveAuthGroup',
     adminGroupModifyPath: 'Admin/updateAdminGroup',
     adminUpdateManagerPath: 'Admin/updateManager',
+    adminMemberTotalPath: 'Admin/getMemberTotal',
+    adminMemberListPath: 'Admin/getMemberList',
     memberExistenceCheckPath : 'Member/verifyMember',
     memberRegisterPath : 'Member/registerMember',
     memberInitPath : 'Member/initMember',

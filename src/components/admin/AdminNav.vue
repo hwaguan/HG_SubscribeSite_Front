@@ -1,7 +1,9 @@
 <template>
   <div class="adminNavContainer">
     <div class="adminNavBody">
-      <div class="adminNavMain"></div>
+      <div class="adminNavMain">
+        <h4>華冠投顧 ClickGo 管理平台<span class="version">V1.0</span></h4>
+      </div>
       <div class="adminNavBtn">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -40,6 +42,13 @@
     box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.3) !important;
     position: fixed;
     z-index: 2;
+
+    .adminNavMain{
+      .version{
+        margin-left : 10px;
+        font-size: 1rem;
+      }
+    }
 
     .adminNavBtn {
       text-align: right;

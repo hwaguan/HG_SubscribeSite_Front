@@ -14,16 +14,21 @@
                 <div class="inputTitle">新密碼</div>
                 <div class="imputDot">:</div>
                 <div class="inputContainer">
-                    <input type="text" maxlength="12" placeholder="請輸入新密碼" v-model="newPasswordModel.passowrd" />
+                    <input :type="showPass ? 'text' : 'password'" maxlength="12" placeholder="請輸入新密碼"
+                        v-model="newPasswordModel.passowrd" @blur="newPassExam" @focus="passErrMsg = ''" />
+                    <div class="confirmError" v-html="passErrMsg"></div>
                 </div>
                 <div class="inputTitle">確認密碼</div>
                 <div class="imputDot">:</div>
                 <div class="inputContainer">
-                    <input type="text" maxlength="12" placeholder="請再次輸入新密碼" v-model="newPasswordModel.confirmPassword" />
+                    <input :type="showCPass ? 'text' : 'password'" maxlength="12" placeholder="請再次輸入新密碼"
+                        v-model="newPasswordModel.confirmPassword" @blur="newPassExam" @focus="cPassErrMsg = ''" />
+                    <div class="confirmError" v-html="cPassErrMsg"></div>
                 </div>
             </div>
             <div class="buttonCase">
-                <div class="triggerChangeBtn" @click="triggerAction">確認重置</div>
+                <div class="triggerChangeBtn" :class="{ 'btnLocked': !examPass, 'btnUnlock': examPass }"
+                    @click="triggerAction">確認重置</div>
             </div>
         </div>
     </div>
@@ -77,13 +82,41 @@
                     border: 1px rgb(150, 150, 150) solid;
                     letter-spacing: .1rem;
                 }
+
+                .confirmError {
+                    padding: 5px;
+                    color: rgb(255, 0, 0);
+                    font-size: .8rem;
+                    text-align: right;
+                    letter-spacing: .1rem;
+                }
             }
         }
 
         .buttonCase {
-            padding-bottom : 50px;
+            padding-bottom: 50px;
             display: flex;
             justify-content: center;
+
+            .triggerChangeBtn {
+                width: 160px;
+                padding: 10px 30px;
+                background-color: rgb(210, 210, 210);
+                border-radius: 5px;
+                text-align: justify;
+                text-align-last: justify;
+            }
+
+            .btnLocked {
+                cursor: not-allowed;
+            }
+
+            .btnUnlock {
+                color: rgb(255, 255, 255);
+                font-weight: 700;
+                background: rgb(40, 70, 255);
+                cursor: pointer;
+            }
         }
     }
 }
@@ -112,7 +145,12 @@ const emit = defineEmits(['loadingSwitch', 'memberStatusChange'])
 const loadingSwitch = (status: boolean) => {
     emit('loadingSwitch', status)
 }
+let examPass = ref(false)
+let showPass = ref(false)
+let showCPass = ref(false)
 let allowChange = ref(false)
+let passErrMsg = ref("")
+let cPassErrMsg = ref("")
 let newPasswordModel = ref({
     passowrd: "",
     confirmPassword: ""
@@ -150,7 +188,46 @@ const verifyRkey = async () => {
 
 verifyRkey()
 
-const triggerAction = () => {
+const newPassExam = () => {
+    const regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,12}$/)
+    
+    if (!regex.test(newPasswordModel.value.passowrd)) passErrMsg.value = "密碼格式不正確"
+    if (!regex.test(newPasswordModel.value.confirmPassword)) cPassErrMsg.value = "確認密碼格式不正確"
 
+    if (newPasswordModel.value.passowrd != "" && newPasswordModel.value.confirmPassword != "") {
+        if (newPasswordModel.value.passowrd != newPasswordModel.value.confirmPassword) {
+            cPassErrMsg.value = "確認密碼與密碼不相符"
+            examPass.value = false
+        } else {
+            examPass.value = true
+        }
+    }
+}
+
+const triggerAction = async () => {
+    if (examPass.value) {
+        const resetPath = config.hostPath + config.memberResetPasswordPath
+        loadingSwitch(true)
+        console.log({ logToken: rkey, newPassword: newPasswordModel.value.passowrd })
+        const resetResult: any = await api.callAPI(resetPath, { logToken: rkey, newPassword: newPasswordModel.value.passowrd })
+        console.log(resetResult)
+        loadingSwitch(false)
+
+        if(resetResult.result){
+            swal.fire({
+            icon: 'success',
+            title: "密碼重置成功",
+            text: "請您牢記新的密碼並重新登入",
+            //showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            //cancelButtonColor: '#d33',
+            confirmButtonText: '碓定',
+            //cancelButtonText: '放棄'
+        })
+            .then((result) => {
+                router.push('/')
+            })
+        }
+    }
 }
 </script>

@@ -145,9 +145,14 @@ const homeObj = [{ Action: 'Home', Text: '首頁', Hit: true, Mov: false, Open: 
 let mainMenuLastHit = ref<any>(homeObj[0])
 let subMenuLastHit = ref<any>(null)
 
+const loadingSwitch = (status: boolean) => {
+    emit('loadingSwitch', status)
+}
+
 const getAdminMenu = async () => {
   const posVals = { mid: admID }
 
+  loadingSwitch(true)
   const resultObj: any = await api.callAPI(getMenuURL, posVals)
   menuObj.value = resultObj.message
 
@@ -164,6 +169,7 @@ const getAdminMenu = async () => {
     }
   })
   menuObj.value = homeObj.concat(resultObj.message)
+  loadingSwitch(false)
 }
 
 getAdminMenu()
@@ -195,9 +201,5 @@ const hitSubMenu = (menuObj: any) => {
     //console.log("hit menu ==> " + menuObj.Action)
     emit('redirectPage', null, menuObj.Action)
   }
-}
-
-const loadingSwitch = (status: boolean) => {
-    emit('loadingSwitch', status)
 }
 </script>
