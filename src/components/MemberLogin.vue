@@ -649,6 +649,7 @@ const proceedRegister = async () => {
       confirmButtonColor: '#3085d6',
       confirmButtonText: '碓定'
     }).then((result) => {
+      isLogin.value = true;
       emit('closeDailog')
     })
   }
@@ -806,7 +807,7 @@ const verifyMail = () => {
 
 const applyResetPassword = async () => {
   if (fpMailPass.value) {
-
+    console.log(fpMail.value)
     const verifyPath = config.hostPath + config.memberExistenceCheckPath
 
     loadingSwitch(true)

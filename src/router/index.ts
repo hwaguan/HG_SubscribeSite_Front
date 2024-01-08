@@ -62,11 +62,6 @@ const router = createRouter({
       path: '/resetPassword/:rkey',
       name: 'resetPassword',
       component: () => import('../views/ResetPasswrodView.vue')
-    },
-    {
-      path: '/testMail',
-      name: 'testMail',
-      component: () => import('../views/TestSendMailView.vue')
     }
   ]
 })
